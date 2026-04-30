@@ -1051,6 +1051,7 @@
 	      settings: "tokyoTrip.settings.v1",
 	      chatActionSeq: "tokyoTrip.chatActionSeq.v1"
 	    };
+	    const ITINERARY_REVISION = "day2-utokyo-ueno-roppongi-20260430";
 
 	    const JAPANESE_NAMES = {
 	      "新宿御苑": "新宿御苑",
@@ -1087,7 +1088,8 @@
                 "title": "东京旅行 2026",
                 "dates": "2026-05-02 ~ 2026-05-05",
                 "hotel": "Park Hyatt Tokyo, Shinjuku",
-                "travelers": 6
+                "travelers": 6,
+                "itineraryRevision": "day2-utokyo-ueno-roppongi-20260430"
           },
           "days": [
                 {
@@ -1195,36 +1197,36 @@
                       "id": 2,
                       "date": "2026-05-03",
                       "label": "Day 2",
-                      "note": "吉卜力、浅草、晴空塔与阿佐谷晚餐",
+                      "note": "东京大学、上野、浅草、晴空塔、阿佐谷晚餐与六本木夜景",
                       "spots": [
                             {
                                   "id": "d2s1",
-                                  "name": "吉卜力美术馆",
-                                  "nameJa": "三鷹の森ジブリ美術館",
-                                  "icon": "🎞",
-                                  "time": "10:00",
-                                  "duration": 120,
-                                  "lat": 35.6962,
-                                  "lng": 139.5704,
-                                  "category": "博物馆",
-                                  "address": "1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo",
-                                  "desc": "三鹰之森吉卜力美术馆是宫崎骏动画世界的沉浸式空间，展陈精致且不允许随意拍照。馆内节奏适合慢慢看，黄金周票务非常紧张。",
+                                  "name": "东京大学",
+                                  "nameJa": "東京大学",
+                                  "icon": "🎓",
+                                  "time": "09:30",
+                                  "duration": 75,
+                                  "lat": 35.7138,
+                                  "lng": 139.7627,
+                                  "category": "文化",
+                                  "address": "7 Chome-3-1 Hongo, Bunkyo City, Tokyo",
+                                  "desc": "日本最顶尖的国立大学，本乡校区拥有经典的赤门和安田讲堂等历史建筑。春日时节银杏大道和校园氛围都很适合漫步。",
                                   "transport": {
                                         "from": "柏悦酒店",
-                                        "method": "🚃 JR中央线至三鹰 + 接驳巴士",
-                                        "duration": "45分钟",
-                                        "cost": "约¥650"
+                                        "method": "🚇 大江户线 + 丸之内线",
+                                        "duration": "35分钟",
+                                        "cost": "约¥260"
                                   },
                                   "ticket": {
-                                        "price": "成人¥1000",
-                                        "reservation": true,
-                                        "url": "https://www.ghibli-museum.jp/"
+                                        "price": "免费",
+                                        "reservation": false,
+                                        "url": "https://www.u-tokyo.ac.jp/"
                                   },
-                                  "bestTime": "10:00入馆，避开午后亲子高峰。",
+                                  "bestTime": "09:30-10:45，上午校园更安静，适合拍赤门和安田讲堂。",
                                   "tips": [
-                                        "需提前购票，每月10日抢次月票",
-                                        "馆内大部分区域禁止摄影",
-                                        "纪念品店排队较长"
+                                        "赤门、安田讲堂和银杏大道最值得停留",
+                                        "校园内保持安静",
+                                        "教学楼内部不建议随意进入"
                                   ],
                                   "warning": {
                                         "level": "red",
@@ -1233,6 +1235,40 @@
                             },
                             {
                                   "id": "d2s2",
+                                  "name": "上野公园",
+                                  "nameJa": "上野公園",
+                                  "icon": "🌸",
+                                  "time": "11:00",
+                                  "duration": 75,
+                                  "lat": 35.7156,
+                                  "lng": 139.773,
+                                  "category": "公园",
+                                  "address": "Uenokoen, Taito City, Tokyo",
+                                  "desc": "东京最著名的赏樱地之一，虽然5月樱花季已过，但绿意盎然的公园仍很适合漫步。周边博物馆众多，是文化气息浓厚的区域。",
+                                  "transport": {
+                                        "from": "东京大学",
+                                        "method": "🚶 步行",
+                                        "duration": "15分钟",
+                                        "cost": "免费"
+                                  },
+                                  "ticket": {
+                                        "price": "公园免费，馆内按项目收费",
+                                        "reservation": false,
+                                        "url": "https://www.kensetsu.metro.tokyo.lg.jp/jimusho/toubuk/ueno/"
+                                  },
+                                  "bestTime": "11:00-12:15，从本乡步行过来，午前人流相对可控。",
+                                  "tips": [
+                                        "可顺路看不忍池",
+                                        "博物馆如要入馆需另留时间",
+                                        "黄金周园内和餐厅都会排队"
+                                  ],
+                                  "warning": {
+                                        "level": "yellow",
+                                        "text": "黄金周注意：5月3-5日人流极高"
+                                  }
+                            },
+                            {
+                                  "id": "d2s3",
                                   "name": "浅草寺",
                                   "nameJa": "浅草寺",
                                   "icon": "⛩",
@@ -1244,17 +1280,17 @@
                                   "address": "2 Chome-3-1 Asakusa, Taito City, Tokyo",
                                   "desc": "东京最具代表性的古寺之一，雷门、仲见世商店街和本堂连成经典路线。黄金周人流极高，但节庆感也最强。",
                                   "transport": {
-                                        "from": "吉卜力美术馆",
-                                        "method": "🚃 JR中央线 + 银座线",
-                                        "duration": "65分钟",
-                                        "cost": "约¥580"
+                                        "from": "上野公园",
+                                        "method": "🚇 银座线",
+                                        "duration": "8分钟",
+                                        "cost": "约¥180"
                                   },
                                   "ticket": {
                                         "price": "免费",
                                         "reservation": false,
                                         "url": "https://www.senso-ji.jp/"
                                   },
-                                  "bestTime": "13:30-15:00，午餐后顺路游览。",
+                                  "bestTime": "13:30-15:00，午餐后顺路游览雷门和仲见世。",
                                   "tips": [
                                         "仲见世边走边吃有区域限制",
                                         "雷门拍照需等空档",
@@ -1266,7 +1302,7 @@
                                   }
                             },
                             {
-                                  "id": "d2s3",
+                                  "id": "d2s4",
                                   "name": "东京晴空塔",
                                   "nameJa": "東京スカイツリー",
                                   "icon": "🗼",
@@ -1300,7 +1336,7 @@
                                   }
                             },
                             {
-                                  "id": "d2s4",
+                                  "id": "d2s5",
                                   "name": "SATO Briand晚餐",
                                   "nameJa": "SATOブリアン",
                                   "icon": "🥩",
@@ -1331,6 +1367,40 @@
                                   "warning": {
                                         "level": "green",
                                         "text": "餐厅预订已确认：5月3日17:20，6人，PGL7WKVM"
+                                  }
+                            },
+                            {
+                                  "id": "d2s6",
+                                  "name": "六本木Hills森大厦观景台",
+                                  "nameJa": "六本木ヒルズ森タワー展望台",
+                                  "icon": "🌃",
+                                  "time": "19:30",
+                                  "duration": 90,
+                                  "lat": 35.6605,
+                                  "lng": 139.7292,
+                                  "category": "观景",
+                                  "address": "6 Chome-10-1 Roppongi, Minato City, Tokyo",
+                                  "desc": "六本木Hills森大厦52层的观景台，可360度俯瞰东京夜景。比东京塔更现代化，视角更佳，且距离阿佐谷餐厅交通更便利。",
+                                  "transport": {
+                                        "from": "SATO Briand晚餐",
+                                        "method": "🚇 JR中央线 + 日比谷线",
+                                        "duration": "35分钟",
+                                        "cost": "约¥430"
+                                  },
+                                  "ticket": {
+                                        "price": "Tokyo City View 成人约¥2200起",
+                                        "reservation": true,
+                                        "url": "https://tcv.roppongihills.com/"
+                                  },
+                                  "bestTime": "19:30-21:00，饭后直接看夜景，城市灯光最完整。",
+                                  "tips": [
+                                        "黄金周建议提前购票",
+                                        "如天气差可改逛六本木Hills室内区域",
+                                        "确认末班车和回酒店路线"
+                                  ],
+                                  "warning": {
+                                        "level": "red",
+                                        "text": "需提前购票：每月10日抢次月票"
                                   }
                             }
                       ]
@@ -3721,10 +3791,22 @@
     function loadItinerary() {
       const raw = loadJson(STORAGE_KEYS.itinerary, null);
       const repaired = sanitizeItinerary(raw);
+      applyItineraryRevision(repaired, raw);
       if (!raw || JSON.stringify(raw) !== JSON.stringify(repaired)) {
         localStorage.setItem(STORAGE_KEYS.itinerary, JSON.stringify(repaired));
       }
       return repaired;
+    }
+
+    function applyItineraryRevision(itinerary, raw) {
+      if (!itinerary?.trip || !Array.isArray(itinerary.days)) return;
+      if (raw?.trip?.itineraryRevision === ITINERARY_REVISION) return;
+      const defaultDay2 = DEFAULT_TRIP.days.find(day => day.id === 2);
+      const targetIndex = itinerary.days.findIndex(day => day.id === 2);
+      if (defaultDay2 && targetIndex >= 0) {
+        itinerary.days[targetIndex] = deepClone(defaultDay2);
+      }
+      itinerary.trip.itineraryRevision = ITINERARY_REVISION;
     }
 
     function saveItinerary() {
@@ -3808,7 +3890,8 @@
         hotel: String(trip.hotel || fallbackTrip.hotel).trim(),
         travelers: Number.isFinite(Number(trip.travelers)) && Number(trip.travelers) > 0
           ? Number(trip.travelers)
-          : fallbackTrip.travelers
+          : fallbackTrip.travelers,
+        itineraryRevision: String(trip.itineraryRevision || fallbackTrip.itineraryRevision || ITINERARY_REVISION).trim()
       };
     }
 
