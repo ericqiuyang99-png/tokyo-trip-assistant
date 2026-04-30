@@ -52,9 +52,9 @@ begin
 
   if existing_hash is null then
     insert into public.trip_documents (id, itinerary, edit_code_hash, revision, updated_at)
-    values (p_id, p_itinerary, encode(digest(p_edit_code, 'sha256'), 'hex'), 1, now());
+    values (p_id, p_itinerary, encode(extensions.digest(convert_to(p_edit_code, 'UTF8'), 'sha256'), 'hex'), 1, now());
   else
-    if existing_hash <> encode(digest(p_edit_code, 'sha256'), 'hex') then
+    if existing_hash <> encode(extensions.digest(convert_to(p_edit_code, 'UTF8'), 'sha256'), 'hex') then
       raise exception 'Invalid cloud sync edit code';
     end if;
 
