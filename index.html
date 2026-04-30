@@ -1,0 +1,3803 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>东京旅行 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root {
+      --purple: #534AB7;
+      --green: #0F6E56;
+      --amber: #EF9F27;
+      --ink: #1F2430;
+      --muted: #69707D;
+      --line: #E8E6F3;
+      --paper: #FFFFFF;
+      --wash: #F8F7FC;
+      --danger: #D83434;
+      --shadow: 0 18px 42px rgba(31, 36, 48, 0.12);
+      --radius: 18px;
+	    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      background: var(--wash);
+      color: var(--ink);
+      font-family: "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(83, 74, 183, 0.08), rgba(15, 110, 86, 0.03) 38%, rgba(248, 247, 252, 1) 80%),
+        var(--wash);
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    a { color: var(--purple); }
+
+	    .app {
+	      width: min(100%, 920px);
+	      margin: 0 auto;
+	      min-height: 100vh;
+	      padding: 14px 14px 96px;
+	    }
+
+    .hero {
+      background: rgba(255, 255, 255, 0.86);
+      border: 1px solid rgba(83, 74, 183, 0.1);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 12px 30px rgba(31, 36, 48, 0.08);
+      backdrop-filter: blur(14px);
+    }
+
+    .eyebrow {
+      margin: 0 0 2px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Playfair Display", "Noto Sans SC", serif;
+      font-size: clamp(31px, 9vw, 52px);
+      line-height: 1.04;
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    .hero-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .meta-pill {
+      min-height: 58px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: #F4F1FF;
+      color: var(--ink);
+    }
+
+    .meta-pill strong {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .meta-pill span {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      word-break: keep-all;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .btn {
+      min-height: 42px;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: var(--purple);
+      color: #fff;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn.secondary { background: #ECEAFB; color: var(--purple); }
+    .btn.green { background: var(--green); }
+    .btn.amber { background: var(--amber); color: #2D210E; }
+    .btn.ghost { background: #F3F3F6; color: var(--ink); }
+    .btn.danger { background: #FCE9E9; color: var(--danger); }
+    .btn.small { min-height: 34px; padding: 7px 10px; border-radius: 12px; font-size: 13px; }
+    .btn.icon { width: 38px; min-height: 38px; padding: 0; border-radius: 50%; }
+
+    .day-tabs {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      padding: 12px 0 10px;
+      background: linear-gradient(180deg, var(--wash) 0%, rgba(248, 247, 252, 0.9) 82%, rgba(248, 247, 252, 0) 100%);
+      backdrop-filter: blur(8px);
+    }
+
+    .day-tab {
+      min-height: 46px;
+      border-radius: 16px;
+      background: #fff;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      font-weight: 900;
+    }
+
+    .day-tab.active {
+      background: var(--purple);
+      color: #fff;
+      border-color: var(--purple);
+      box-shadow: 0 10px 24px rgba(83, 74, 183, 0.28);
+    }
+
+    .day-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 4px 0 12px;
+    }
+
+    .day-summary h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .day-summary p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+	    .day-stats {
+	      flex: none;
+	      padding: 8px 10px;
+      border-radius: 14px;
+      background: #fff;
+      color: var(--purple);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: right;
+	      border: 1px solid var(--line);
+	    }
+
+	    .itinerary-search {
+	      margin: 0 0 14px;
+	      padding: 12px;
+	      border-radius: 20px;
+	      background: rgba(255, 255, 255, 0.86);
+	      border: 1px solid rgba(83, 74, 183, 0.1);
+	      box-shadow: 0 10px 24px rgba(31, 36, 48, 0.06);
+	    }
+
+	    .itinerary-search-bar {
+	      display: grid;
+	      grid-template-columns: 1fr auto;
+	      gap: 8px;
+	    }
+
+	    .itinerary-search input {
+	      width: 100%;
+	      min-height: 42px;
+	      border: 1px solid var(--line);
+	      border-radius: 14px;
+	      padding: 0 12px;
+	      background: #fff;
+	      outline: none;
+	    }
+
+	    .itinerary-results {
+	      display: none;
+	      gap: 8px;
+	      margin-top: 10px;
+	    }
+
+	    .itinerary-results.show {
+	      display: grid;
+	    }
+
+    .timeline {
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      bottom: 10px;
+      width: 2px;
+      background: linear-gradient(var(--purple), var(--green));
+      border-radius: 999px;
+      opacity: 0.28;
+    }
+
+    .spot-card {
+      position: relative;
+      margin: 0 0 10px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: var(--paper);
+      border: 1px solid rgba(83, 74, 183, 0.12);
+      box-shadow: 0 10px 24px rgba(31, 36, 48, 0.07);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+      touch-action: pan-y;
+    }
+
+    .spot-card::before {
+      content: "";
+      position: absolute;
+      left: -15px;
+      top: 24px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--purple);
+      border: 3px solid var(--wash);
+    }
+
+    .spot-card.active {
+      border-color: var(--amber);
+      box-shadow: 0 14px 30px rgba(239, 159, 39, 0.2);
+    }
+
+    .spot-card.dragging {
+      opacity: 0.72;
+      transform: scale(1.02);
+      border-style: dashed;
+    }
+
+	    .spot-head {
+	      display: grid;
+	      grid-template-columns: auto auto 1fr auto;
+	      align-items: start;
+	      gap: 10px;
+	    }
+
+	    .drag-handle,
+	    .spot-time {
+	      border: 0;
+	      cursor: grab;
+	    }
+
+	    .drag-handle {
+	      width: 34px;
+	      min-height: 34px;
+	      border-radius: 12px;
+	      background: #F6F5FA;
+	      color: var(--muted);
+	      font-size: 18px;
+	      font-weight: 900;
+	      line-height: 1;
+	      touch-action: none;
+	      user-select: none;
+	    }
+
+	    .drag-handle:active {
+	      cursor: grabbing;
+	    }
+
+	    .spot-time {
+	      min-width: 52px;
+	      padding: 6px 8px;
+	      border-radius: 12px;
+	      background: #F4F1FF;
+      color: var(--purple);
+      font-weight: 900;
+	      text-align: center;
+	      font-size: 13px;
+	    }
+
+	    .spot-time {
+	      cursor: pointer;
+	    }
+
+	    .spot-ja {
+	      display: block;
+	      margin-top: 2px;
+	      color: var(--green);
+	      font-size: 12px;
+	      font-weight: 800;
+	      line-height: 1.35;
+	    }
+
+    .spot-title {
+      min-width: 0;
+    }
+
+    .spot-title h3 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.32;
+    }
+
+    .spot-title p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .more-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #F3F3F6;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 25px;
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: #EEF7F4;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tag.red { background: #FCE9E9; color: var(--danger); }
+    .tag.yellow { background: #FFF3D9; color: #A86500; }
+    .tag.green { background: #E7F5EF; color: var(--green); }
+    .tag.purple { background: #F0EEFF; color: var(--purple); }
+
+    .transport-link {
+      margin: -2px 0 10px 18px;
+      padding: 8px 12px;
+      border-left: 2px solid rgba(83, 74, 183, 0.2);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .optional-section {
+      margin-top: 22px;
+      padding: 16px;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid rgba(83, 74, 183, 0.1);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .library-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .library-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 16px;
+      background: #F8F7FC;
+    }
+
+    .library-card strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .library-card span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .sheet-backdrop,
+    .overlay-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 18, 27, 0.32);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.24s ease;
+      z-index: 180;
+    }
+
+    .sheet-backdrop.show,
+    .overlay-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .bottom-sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 220;
+      max-height: 86vh;
+      padding: 10px 14px max(18px, env(safe-area-inset-bottom));
+      background: #fff;
+      border-radius: 28px 28px 0 0;
+      box-shadow: var(--shadow);
+      transform: translateY(104%);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .bottom-sheet.show { transform: translateY(0); }
+
+    .grabber {
+      width: 44px;
+      height: 5px;
+      border-radius: 999px;
+      background: #D8D5E8;
+      margin: 0 auto 14px;
+    }
+
+    .sheet-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .sheet-title h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.15;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .detail-block {
+      padding: 13px;
+      border-radius: 16px;
+      background: #F8F7FC;
+    }
+
+    .detail-block h3 {
+      margin: 0 0 7px;
+      font-size: 14px;
+      color: var(--purple);
+    }
+
+    .detail-block p,
+    .detail-block li {
+      margin: 0;
+      color: var(--ink);
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .detail-block ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .sheet-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+	    .map-drawer {
+	      position: fixed;
+	      right: 0;
+	      top: 82px;
+	      bottom: 18px;
+	      z-index: 120;
+	      width: min(88vw, 430px);
+	      min-height: 360px;
+	      background: #fff;
+	      border-radius: 24px 0 0 24px;
+	      box-shadow: -18px 18px 44px rgba(31, 36, 48, 0.16);
+	      transform: translateX(100%);
+	      transition: transform 0.3s ease;
+	      overflow: visible;
+	    }
+
+	    .map-drawer.expanded {
+	      transform: translateX(0);
+	    }
+
+	    .map-toolbar {
+	      position: absolute;
+	      inset: 9px 10px auto;
+	      z-index: 500;
+	      display: grid;
+	      grid-template-columns: 1fr auto;
+	      gap: 7px;
+	      align-items: center;
+	    }
+
+	    .map-toolbar .map-toggle {
+	      position: absolute;
+	      left: -48px;
+	      top: 0;
+	      width: 42px;
+	      height: 42px;
+	      min-height: 42px;
+	      border-radius: 18px 0 0 18px;
+	      box-shadow: -8px 10px 22px rgba(31, 36, 48, 0.14);
+	    }
+
+    .map-toolbar input {
+      width: 100%;
+      min-height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0 12px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 8px 18px rgba(31, 36, 48, 0.09);
+    }
+
+	    #map {
+	      height: 100%;
+	      width: 100%;
+	      background: #E7EBEF;
+	      border-radius: inherit;
+	      overflow: hidden;
+	    }
+
+    .search-results {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      z-index: 510;
+      display: none;
+      max-height: 33vh;
+      overflow: auto;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 12px 26px rgba(31, 36, 48, 0.14);
+      padding: 8px;
+    }
+
+    .search-results.show { display: grid; gap: 8px; }
+
+    .result-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 14px;
+      background: #F8F7FC;
+      align-items: center;
+    }
+
+    .result-card strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+	    .result-card span {
+	      display: block;
+	      color: var(--muted);
+	      font-size: 12px;
+	      line-height: 1.35;
+	    }
+
+	    .result-card .ja {
+	      color: var(--green);
+	      font-weight: 800;
+	    }
+
+	    .copy-row {
+	      display: flex;
+	      flex-wrap: wrap;
+	      gap: 8px;
+	      margin-top: 8px;
+	    }
+
+	    .fab {
+	      position: fixed;
+	      right: 16px;
+	      bottom: 22px;
+	      z-index: 160;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--purple);
+      color: #fff;
+      box-shadow: 0 16px 36px rgba(83, 74, 183, 0.34);
+      font-size: 25px;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 260;
+      background: #fff;
+      transform: translateY(105%);
+      transition: transform 0.28s ease;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .overlay.show { transform: translateY(0); }
+
+    .overlay-head {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .overlay-head h2 {
+      margin: 0;
+      text-align: center;
+      font-size: 18px;
+    }
+
+    .chat-log {
+      overflow: auto;
+      padding: 16px 14px 100px;
+      background: var(--wash);
+    }
+
+    .message {
+      width: fit-content;
+      max-width: 86%;
+      margin-bottom: 10px;
+      padding: 11px 13px;
+      border-radius: 18px;
+      background: #fff;
+      line-height: 1.62;
+      font-size: 14px;
+      white-space: pre-wrap;
+      box-shadow: 0 8px 18px rgba(31, 36, 48, 0.06);
+    }
+
+    .message.user {
+      margin-left: auto;
+      background: var(--purple);
+      color: #fff;
+    }
+
+    .message-inner {
+      display: grid;
+      gap: 10px;
+    }
+
+    .chat-action-card {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #F6F4FF;
+      border: 1px solid rgba(83, 74, 183, 0.16);
+      color: var(--ink);
+    }
+
+    .chat-action-card strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+    }
+
+    .chat-action-card p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .chat-action-meta {
+      margin-top: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--purple);
+    }
+
+    .chat-action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .spot-link {
+      display: inline-flex;
+      color: var(--purple);
+      font-weight: 900;
+      background: #F0EEFF;
+      border-radius: 999px;
+      padding: 0 7px;
+      margin: 0 1px;
+      cursor: pointer;
+    }
+
+    .chat-box {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 280;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      padding: 10px 12px max(12px, env(safe-area-inset-bottom));
+      background: rgba(255, 255, 255, 0.94);
+      border-top: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+
+    .chat-box textarea {
+      min-height: 44px;
+      max-height: 110px;
+      resize: none;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px 12px;
+      outline: none;
+    }
+
+    .modal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      z-index: 300;
+      width: min(calc(100% - 28px), 560px);
+      max-height: 86vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      transform: translate(-50%, -50%) scale(0.95);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      padding: 16px;
+    }
+
+    .modal.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .modal h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field label {
+      display: block;
+      margin: 0 0 5px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      outline: none;
+      background: #fff;
+    }
+
+    .field textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+	    .toast {
+	      position: fixed;
+	      left: 50%;
+	      bottom: 92px;
+      z-index: 400;
+      transform: translateX(-50%) translateY(20px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 10px 13px;
+      border-radius: 999px;
+      background: rgba(31, 36, 48, 0.94);
+      color: #fff;
+      font-size: 13px;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      max-width: calc(100% - 28px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+	    @media (min-width: 720px) {
+	      .app {
+	        padding: 24px 22px 120px;
+	      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      .hero-meta {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .library-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bottom-sheet {
+        left: 50%;
+        right: auto;
+        width: min(620px, calc(100% - 28px));
+        transform: translate(-50%, 104%);
+        border-radius: 28px;
+        bottom: 18px;
+      }
+
+      .bottom-sheet.show {
+        transform: translate(-50%, 0);
+      }
+
+	      .map-drawer {
+	        top: 96px;
+	        bottom: 24px;
+	        width: min(430px, 34vw);
+	        transform: translateX(100%);
+	      }
+
+	      .map-drawer.expanded {
+	        transform: translateX(0);
+	      }
+
+      .overlay {
+        left: 50%;
+        width: min(720px, 100%);
+        transform: translate(-50%, 105%);
+        box-shadow: var(--shadow);
+      }
+
+      .overlay.show {
+        transform: translate(-50%, 0);
+      }
+
+      .chat-box {
+        left: 50%;
+        width: min(720px, 100%);
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <p class="eyebrow">Private Tokyo Companion</p>
+      <h1 id="tripTitle">东京旅行 2026</h1>
+      <div class="hero-meta">
+        <div class="meta-pill"><strong>日期</strong><span id="tripDates"></span></div>
+        <div class="meta-pill"><strong>酒店</strong><span id="tripHotel"></span></div>
+        <div class="meta-pill"><strong>人数</strong><span id="tripTravelers"></span></div>
+        <div class="meta-pill"><strong>地图</strong><span>Google Maps</span></div>
+      </div>
+      <div class="hero-actions">
+        <button class="btn secondary" id="settingsBtn">⚙ 设置</button>
+        <button class="btn amber" id="addSpotBtn">＋ 添加</button>
+        <button class="btn ghost" id="resetBtn">↺ 重置</button>
+      </div>
+    </section>
+
+    <nav class="day-tabs" id="dayTabs" aria-label="Day tabs"></nav>
+
+	    <section class="day-summary">
+	      <div>
+	        <h2 id="dayTitle"></h2>
+	        <p id="dayNote"></p>
+	      </div>
+	      <div class="day-stats" id="dayStats"></div>
+	    </section>
+
+	    <section class="itinerary-search">
+	      <div class="itinerary-search-bar">
+	        <input id="itinerarySearchInput" placeholder="搜索景点、餐厅或商店，直接加入当前 Day">
+	        <button class="btn small amber" id="itinerarySearchBtn">搜索</button>
+	      </div>
+	      <div class="itinerary-results" id="itinerarySearchResults"></div>
+	    </section>
+
+	    <section class="timeline" id="timeline"></section>
+
+    <section class="optional-section">
+      <div class="section-head">
+        <h2>可选景点库</h2>
+        <span class="tag purple">10+ 备选</span>
+      </div>
+      <div class="library-grid" id="libraryGrid"></div>
+    </section>
+  </main>
+
+  <section class="map-drawer" id="mapDrawer">
+    <div class="map-toolbar">
+      <input id="placeSearchInput" placeholder="搜索附近：拉面 / 便利店 / 药妆">
+      <button class="btn small secondary" id="nearbyBtn">显示附近</button>
+	      <button class="btn small icon map-toggle" id="mapToggleBtn" aria-label="展开地图" aria-expanded="false">‹</button>
+    </div>
+    <div id="map" aria-label="行程地图"></div>
+    <div class="search-results" id="searchResults"></div>
+  </section>
+
+  <button class="fab" id="chatFab" aria-label="打开 AI 对话">💬</button>
+
+  <div class="sheet-backdrop" id="sheetBackdrop"></div>
+  <section class="bottom-sheet" id="detailSheet" aria-live="polite"></section>
+
+  <div class="overlay-backdrop" id="modalBackdrop"></div>
+  <section class="modal" id="spotModal"></section>
+  <section class="modal" id="settingsModal"></section>
+
+  <section class="overlay" id="chatOverlay">
+    <header class="overlay-head">
+      <button class="btn icon ghost" id="closeChatBtn">×</button>
+      <h2>Claude 旅行助手</h2>
+      <button class="btn small secondary" id="clearChatBtn">清空</button>
+    </header>
+    <div class="chat-log" id="chatLog"></div>
+    <div class="chat-box">
+      <button class="btn icon secondary" id="voiceBtn" title="语音输入">🎙</button>
+      <textarea id="chatInput" rows="1" placeholder="问我东京行程、交通、门票或附近餐厅"></textarea>
+      <button class="btn icon" id="sendChatBtn">➤</button>
+    </div>
+  </section>
+
+  <div class="toast" id="toast"></div>
+
+	  <script>
+	    const STORAGE_KEYS = {
+	      itinerary: "tokyoTrip.itinerary.v1",
+	      chat: "tokyoTrip.chat.v1",
+	      settings: "tokyoTrip.settings.v1",
+	      chatActionSeq: "tokyoTrip.chatActionSeq.v1"
+	    };
+
+	    const JAPANESE_NAMES = {
+	      "新宿御苑": "新宿御苑",
+	      "东京都厅 Night & Light": "東京都庁 Night & Light",
+	      "思い出横丁": "思い出横丁",
+	      "吉卜力美术馆": "三鷹の森ジブリ美術館",
+	      "浅草寺": "浅草寺",
+	      "东京晴空塔": "東京スカイツリー",
+	      "SATO Briand晚餐": "SATOブリアン",
+	      "新宿高速巴士": "バスタ新宿",
+	      "河口湖": "河口湖",
+	      "富士山五合目": "富士山五合目",
+	      "明治神宫": "明治神宮",
+	      "表参道Hills": "表参道ヒルズ",
+	      "涩谷十字路口": "渋谷スクランブル交差点",
+	      "新宿退房": "パークハイアット東京",
+	      "机场": "空港",
+	      "皇居外苑": "皇居外苑",
+	      "银座": "銀座",
+	      "中目黑": "中目黒",
+	      "台场 100%哆啦A梦特展": "お台場 100%ドラえもん展",
+	      "秋叶原": "秋葉原",
+	      "六本木Hills": "六本木ヒルズ",
+	      "代官山T-SITE": "代官山T-SITE",
+	      "丰洲市场": "豊洲市場",
+	      "上野公园": "上野公園",
+	      "东京站丸之内": "東京駅丸の内",
+	      "麻布台Hills": "麻布台ヒルズ",
+	      "东京大学": "東京大学"
+	    };
+
+    const DEFAULT_TRIP = {
+      trip: {
+        title: "东京旅行 2026",
+        dates: "2026-05-02 ~ 2026-05-05",
+        hotel: "Park Hyatt Tokyo, Shinjuku",
+        travelers: 6
+      },
+      days: [
+        {
+          id: 1,
+          date: "2026-05-02",
+          label: "Day 1",
+          note: "下午落地，新宿轻松展开",
+          spots: [
+            {
+              id: "d1s1",
+              name: "新宿御苑",
+              icon: "🌿",
+              time: "15:30",
+              duration: 90,
+              lat: 35.6852,
+              lng: 139.7101,
+              category: "公园",
+              address: "11 Naitomachi, Shinjuku City, Tokyo",
+              desc: "融合日式、英式、法式三种园林风格，5月绿意最盛。适合用安静的步调开启东京行程。",
+              transport: { from: "柏悦酒店", method: "🚶 步行", duration: "18分钟", cost: "免费" },
+              ticket: { price: "¥500", reservation: false, url: "https://fng.or.jp/shinjuku/" },
+              bestTime: "15:00-17:30，午后光线柔和，人流逐渐回落。",
+              tips: ["周一休园，黄金周期间仍需确认开放时间", "园内步行较多，建议轻装", "17:30前后陆续闭园"]
+            },
+            {
+              id: "d1s2",
+              name: "东京都厅 Night & Light",
+              icon: "🌃",
+              time: "19:00",
+              duration: 50,
+              lat: 35.6896,
+              lng: 139.6917,
+              category: "地标",
+              address: "2 Chome-8-1 Nishishinjuku, Shinjuku City, Tokyo",
+              desc: "东京都厅夜间光影秀与免费展望空间，是新宿夜景的轻松选择。适合饭前或饭后短暂停留。",
+              transport: { from: "新宿御苑", method: "🚇 丸之内线 + 步行", duration: "18分钟", cost: "约¥180" },
+              ticket: { price: "免费", reservation: false, url: "https://www.metro.tokyo.lg.jp/" },
+              bestTime: "19:00-20:30，天色完全暗下后视觉效果更好。",
+              tips: ["安检排队可能需要10-20分钟", "展望室开放日可能变动", "夜间风大，带薄外套"]
+            },
+            {
+              id: "d1s3",
+              name: "思い出横丁",
+              icon: "🍢",
+              time: "20:30",
+              duration: 80,
+              lat: 35.6934,
+              lng: 139.6993,
+              category: "美食",
+              address: "1 Chome-2 Nishishinjuku, Shinjuku City, Tokyo",
+              desc: "新宿西口的昭和风小巷，串烧、居酒屋和灯笼气氛非常浓。适合小团分散入座，体验东京夜晚烟火气。",
+              transport: { from: "东京都厅", method: "🚶 步行", duration: "13分钟", cost: "免费" },
+              ticket: { price: "按消费", reservation: false, url: "" },
+              bestTime: "20:30后，灯光和小巷气氛最好。",
+              tips: ["多数店铺很小，6人可能需拆桌", "部分店只收现金", "注意不要堵在巷口拍照"]
+            }
+          ]
+        },
+        {
+          id: 2,
+          date: "2026-05-03",
+          label: "Day 2",
+          note: "吉卜力、浅草、晴空塔与阿佐谷晚餐",
+          spots: [
+            {
+              id: "d2s1",
+              name: "吉卜力美术馆",
+              icon: "🎞",
+              time: "10:00",
+              duration: 120,
+              lat: 35.6962,
+              lng: 139.5704,
+              category: "博物馆",
+              address: "1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo",
+              desc: "三鹰之森吉卜力美术馆是宫崎骏动画世界的沉浸式空间，展陈精致且不允许随意拍照。馆内节奏适合慢慢看，黄金周票务非常紧张。",
+              transport: { from: "柏悦酒店", method: "🚃 JR中央线至三鹰 + 接驳巴士", duration: "45分钟", cost: "约¥650" },
+              ticket: { price: "成人¥1000", reservation: true, url: "https://www.ghibli-museum.jp/" },
+              bestTime: "10:00入馆，避开午后亲子高峰。",
+              tips: ["需提前购票，每月10日抢次月票", "馆内大部分区域禁止摄影", "纪念品店排队较长"],
+              warning: { level: "red", text: "需提前购票：每月10日抢次月票" }
+            },
+            {
+              id: "d2s2",
+              name: "浅草寺",
+              icon: "⛩",
+              time: "13:30",
+              duration: 90,
+              lat: 35.7148,
+              lng: 139.7967,
+              category: "神社",
+              address: "2 Chome-3-1 Asakusa, Taito City, Tokyo",
+              desc: "东京最具代表性的古寺之一，雷门、仲见世商店街和本堂连成经典路线。黄金周人流极高，但节庆感也最强。",
+              transport: { from: "吉卜力美术馆", method: "🚃 JR中央线 + 银座线", duration: "65分钟", cost: "约¥580" },
+              ticket: { price: "免费", reservation: false, url: "https://www.senso-ji.jp/" },
+              bestTime: "13:30-15:00，午餐后顺路游览。",
+              tips: ["仲见世边走边吃有区域限制", "雷门拍照需等空档", "黄金周建议预留更长步行时间"],
+              warning: { level: "yellow", text: "黄金周注意：5月3-5日人流极高" }
+            },
+            {
+              id: "d2s3",
+              name: "东京晴空塔",
+              icon: "🗼",
+              time: "15:20",
+              duration: 75,
+              lat: 35.7101,
+              lng: 139.8107,
+              category: "地标",
+              address: "1 Chome-1-2 Oshiage, Sumida City, Tokyo",
+              desc: "东京最高的观景塔，晴天可远眺富士山方向。黄金周排队时间显著增加，建议提前网购指定时段票。",
+              transport: { from: "浅草寺", method: "🚶 步行或东武晴空塔线", duration: "22分钟", cost: "步行免费 / 电车约¥160" },
+              ticket: { price: "天望甲板约¥2100起", reservation: true, url: "https://www.tokyo-skytree.jp/" },
+              bestTime: "15:20-16:40，兼顾白天城市视野和晚餐交通。",
+              tips: ["黄金周提前网购", "商场电梯和厕所也会排队", "带好预约二维码"],
+              warning: { level: "red", text: "需提前购票：黄金周建议网购指定时段" }
+            },
+            {
+              id: "d2s4",
+              name: "SATO Briand晚餐",
+              icon: "🥩",
+              time: "17:20",
+              duration: 110,
+              lat: 35.7041,
+              lng: 139.6364,
+              category: "美食",
+              address: "1 Chome-37-6 Asagayaminami, Suginami City, Tokyo",
+              desc: "阿佐谷的人气和牛烧肉店，以厚切牛排和招牌牛排三明治闻名。本次6人订位已确认，务必准时抵达。",
+              transport: { from: "东京晴空塔", method: "🚇 半藏门线 + JR中央线", duration: "55分钟", cost: "约¥520" },
+              ticket: { price: "按套餐/点单", reservation: true, url: "https://tabelog.com/tokyo/A1319/A131905/13164962/" },
+              bestTime: "17:20准时入店，订位窗口固定。",
+              tips: ["预订号 PGL7WKVM", "6人已确认", "从晴空塔出发需留足换乘时间"],
+              warning: { level: "green", text: "餐厅预订已确认：5月3日17:20，6人，PGL7WKVM" }
+            }
+          ]
+        },
+        {
+          id: 3,
+          date: "2026-05-04",
+          label: "Day 3",
+          note: "富士山与河口湖一日往返",
+          spots: [
+            {
+              id: "d3s1",
+              name: "新宿高速巴士",
+              icon: "🚌",
+              time: "07:30",
+              duration: 30,
+              lat: 35.6887,
+              lng: 139.7002,
+              category: "交通",
+              address: "5 Chome-24-55 Sendagaya, Shibuya City, Tokyo",
+              desc: "从新宿高速巴士总站出发前往河口湖，是富士山一日游最省心的方式。黄金周道路可能拥堵，务必提前到站。",
+              transport: { from: "柏悦酒店", method: "🚕 出租车或酒店接驳", duration: "12分钟", cost: "约¥1600" },
+              ticket: { price: "单程约¥2200", reservation: true, url: "https://www.highwaybus.com/" },
+              bestTime: "07:30前到站，预留找站台和取票时间。",
+              tips: ["黄金周高速易堵", "建议提前买往返票", "带水和轻食"],
+              warning: { level: "yellow", text: "黄金周注意：高速路况不可控" }
+            },
+            {
+              id: "d3s2",
+              name: "河口湖",
+              icon: "🗻",
+              time: "10:00",
+              duration: 150,
+              lat: 35.5171,
+              lng: 138.7518,
+              category: "自然",
+              address: "Fujikawaguchiko, Yamanashi",
+              desc: "河口湖是观赏富士山倒影和湖景的经典地点。天气好时湖畔步道和缆车区域都很适合拍照。",
+              transport: { from: "新宿高速巴士", method: "🚌 高速巴士", duration: "约2小时", cost: "约¥2200" },
+              ticket: { price: "湖畔免费", reservation: false, url: "https://www.fujisan.ne.jp/" },
+              bestTime: "10:00-12:30，上午能见度通常更好。",
+              tips: ["天气变化快，带薄外套", "看富士山很吃云量", "湖边餐厅黄金周需排队"],
+              warning: { level: "yellow", text: "黄金周注意：热门观景点拥挤" }
+            },
+            {
+              id: "d3s3",
+              name: "富士山五合目",
+              icon: "🌄",
+              time: "14:00",
+              duration: 90,
+              lat: 35.3949,
+              lng: 138.7327,
+              category: "自然",
+              address: "Narusawa, Minamitsuru District, Yamanashi",
+              desc: "富士山五合目可近距离感受山体与云海，海拔较高，气温明显低于东京。若天气或交通限制，可改在河口湖周边深度游。",
+              transport: { from: "河口湖", method: "🚌 登山巴士", duration: "55分钟", cost: "约¥1780" },
+              ticket: { price: "区域免费，巴士另计", reservation: false, url: "https://www.fujisan-climb.jp/" },
+              bestTime: "14:00前后，视天气决定是否上山。",
+              tips: ["气温比东京低约10度", "山路可能限流或停运", "注意返程巴士末班时间"],
+              warning: { level: "yellow", text: "黄金周注意：交通与天气需当天确认" }
+            }
+          ]
+        },
+        {
+          id: 4,
+          date: "2026-05-05",
+          label: "Day 4",
+          note: "半天城市散步，回新宿退房去机场",
+          spots: [
+            {
+              id: "d4s1",
+              name: "明治神宫",
+              icon: "🌲",
+              time: "09:00",
+              duration: 75,
+              lat: 35.6764,
+              lng: 139.6993,
+              category: "神社",
+              address: "1-1 Yoyogikamizonocho, Shibuya City, Tokyo",
+              desc: "东京市中心最静谧的神社森林，早上进入能避开大部分人潮。适合在离日前留出一段安静步行。",
+              transport: { from: "柏悦酒店", method: "🚇 大江户线 + 步行", duration: "24分钟", cost: "约¥220" },
+              ticket: { price: "免费", reservation: false, url: "https://www.meijijingu.or.jp/" },
+              bestTime: "09:00-10:15，早间更清净。",
+              tips: ["参道碎石路较长", "主殿区域保持安静", "黄金周仍会逐渐变挤"],
+              warning: { level: "yellow", text: "黄金周注意：5月5日为儿童节" }
+            },
+            {
+              id: "d4s2",
+              name: "表参道Hills",
+              icon: "🛍",
+              time: "10:40",
+              duration: 60,
+              lat: 35.6674,
+              lng: 139.7086,
+              category: "购物",
+              address: "4 Chome-12-10 Jingumae, Shibuya City, Tokyo",
+              desc: "表参道的建筑与精品购物地标，适合短暂停留、买伴手礼或咖啡休息。动线紧凑，离涩谷不远。",
+              transport: { from: "明治神宫", method: "🚶 步行", duration: "18分钟", cost: "免费" },
+              ticket: { price: "免费", reservation: false, url: "https://www.omotesandohills.com/" },
+              bestTime: "10:40-11:40，店铺陆续开门后刚好进入。",
+              tips: ["部分店11点开门", "退税需带护照", "控制购物时间避免影响退房"]
+            },
+            {
+              id: "d4s3",
+              name: "涩谷十字路口",
+              icon: "🚦",
+              time: "12:00",
+              duration: 35,
+              lat: 35.6595,
+              lng: 139.7005,
+              category: "地标",
+              address: "Shibuya Scramble Crossing, Tokyo",
+              desc: "东京最具辨识度的城市路口之一，适合快速拍照打卡。周边咖啡店可俯拍，但黄金周排队较久。",
+              transport: { from: "表参道Hills", method: "🚇 银座线或步行", duration: "12分钟", cost: "约¥180" },
+              ticket: { price: "免费", reservation: false, url: "" },
+              bestTime: "12:00，午间人流充足且光线稳定。",
+              tips: ["注意红绿灯安全", "拍照不要停在路中间", "俯拍位可能排队"],
+              warning: { level: "yellow", text: "黄金周注意：涩谷区域人流密集" }
+            },
+            {
+              id: "d4s4",
+              name: "新宿退房",
+              icon: "🧳",
+              time: "13:00",
+              duration: 45,
+              lat: 35.6856,
+              lng: 139.6907,
+              category: "酒店",
+              address: "Park Hyatt Tokyo, 3-7-1-2 Nishi Shinjuku, Tokyo",
+              desc: "返回柏悦酒店整理行李并退房。建议确认机场交通时间，黄金周车站与道路都可能拥挤。",
+              transport: { from: "涩谷十字路口", method: "🚃 JR山手线 + 出租车/步行", duration: "25分钟", cost: "约¥180起" },
+              ticket: { price: "无", reservation: false, url: "" },
+              bestTime: "13:00前后，留足行李整理与交通缓冲。",
+              tips: ["检查护照和购物袋", "提前叫车或确认利木津巴士", "把机场时间倒推至少3小时"]
+            },
+            {
+              id: "d4s5",
+              name: "机场",
+              icon: "✈️",
+              time: "14:30",
+              duration: 120,
+              lat: 35.5494,
+              lng: 139.7798,
+              category: "交通",
+              address: "Tokyo International Airport / Narita Airport",
+              desc: "根据实际航班选择羽田或成田路线。黄金周返程客流高，建议更早抵达机场办理值机和退税。",
+              transport: { from: "新宿退房", method: "🚃 机场线/利木津巴士/出租车", duration: "羽田约45-70分钟，成田约90-120分钟", cost: "路线不同" },
+              ticket: { price: "按交通方式", reservation: false, url: "" },
+              bestTime: "航班起飞前至少3小时到达。",
+              tips: ["确认出发机场是羽田还是成田", "退税和托运可能排队", "保留交通缓冲"]
+            }
+          ]
+        }
+      ]
+    };
+
+    const OPTIONAL_SPOTS = [
+      spotTemplate("lib1", "皇居外苑", "🏯", "自然", 35.6825, 139.7618, "东京中心的开阔绿地，适合短时间散步和拍照。", "免费"),
+      spotTemplate("lib2", "银座", "💎", "购物", 35.6719, 139.7658, "百货、精品店和餐厅密集，适合买伴手礼。", "免费"),
+      spotTemplate("lib3", "中目黑", "☕", "街区", 35.6444, 139.6993, "目黑川沿岸咖啡、杂货与小店很多。", "免费"),
+      spotTemplate("lib4", "台场 100%哆啦A梦特展", "🤖", "展览", 35.6248, 139.7754, "亲子和动漫爱好者适合加入的限定展览。", "需提前购票", { level: "red", text: "需提前购票：100% 哆啦A梦特展" }),
+      spotTemplate("lib5", "秋叶原", "🎮", "街区", 35.6984, 139.7730, "电器、游戏、动漫文化集中地。", "免费"),
+      spotTemplate("lib6", "六本木Hills", "🌆", "地标", 35.6605, 139.7292, "购物、展望台和美术馆集中，夜景优秀。", "按项目"),
+      spotTemplate("lib7", "代官山T-SITE", "📚", "街区", 35.6488, 139.6996, "书店、咖啡和生活方式店铺适合慢逛。", "免费"),
+      spotTemplate("lib8", "丰洲市场", "🍣", "美食", 35.6431, 139.7859, "海鲜与寿司选择丰富，适合早午餐。", "免费"),
+      spotTemplate("lib9", "上野公园", "🪷", "公园", 35.7156, 139.7730, "博物馆、美术馆与公园散步可组合。", "免费"),
+      spotTemplate("lib10", "东京站丸之内", "🚉", "地标", 35.6812, 139.7671, "红砖站房、地下街和伴手礼店都很方便。", "免费"),
+      spotTemplate("lib11", "麻布台Hills", "🏙", "购物", 35.6602, 139.7407, "新城市综合体，适合建筑、餐饮和精品店。", "免费")
+    ];
+
+    const state = {
+      itinerary: loadItinerary(),
+      settings: loadSettings(),
+      chat: loadChat(),
+      chatActionSeq: loadChatActionSeq(),
+      activeDayId: 1,
+      selectedSpotId: null,
+      mapProvider: "",
+      map: null,
+      markers: new Map(),
+      resultMarkers: [],
+      routeLine: null,
+      placesService: null,
+      drag: { timer: null, sourceIndex: null, active: false }
+    };
+
+    const els = {
+      tripTitle: document.getElementById("tripTitle"),
+      tripDates: document.getElementById("tripDates"),
+      tripHotel: document.getElementById("tripHotel"),
+      tripTravelers: document.getElementById("tripTravelers"),
+      dayTabs: document.getElementById("dayTabs"),
+      dayTitle: document.getElementById("dayTitle"),
+      dayNote: document.getElementById("dayNote"),
+	      dayStats: document.getElementById("dayStats"),
+	      itinerarySearchInput: document.getElementById("itinerarySearchInput"),
+	      itinerarySearchBtn: document.getElementById("itinerarySearchBtn"),
+	      itinerarySearchResults: document.getElementById("itinerarySearchResults"),
+	      timeline: document.getElementById("timeline"),
+      libraryGrid: document.getElementById("libraryGrid"),
+      sheetBackdrop: document.getElementById("sheetBackdrop"),
+      detailSheet: document.getElementById("detailSheet"),
+      mapDrawer: document.getElementById("mapDrawer"),
+      mapToggleBtn: document.getElementById("mapToggleBtn"),
+      nearbyBtn: document.getElementById("nearbyBtn"),
+      placeSearchInput: document.getElementById("placeSearchInput"),
+      searchResults: document.getElementById("searchResults"),
+      chatFab: document.getElementById("chatFab"),
+      chatOverlay: document.getElementById("chatOverlay"),
+      closeChatBtn: document.getElementById("closeChatBtn"),
+      clearChatBtn: document.getElementById("clearChatBtn"),
+      chatLog: document.getElementById("chatLog"),
+      chatInput: document.getElementById("chatInput"),
+      sendChatBtn: document.getElementById("sendChatBtn"),
+      voiceBtn: document.getElementById("voiceBtn"),
+      modalBackdrop: document.getElementById("modalBackdrop"),
+      spotModal: document.getElementById("spotModal"),
+      settingsModal: document.getElementById("settingsModal"),
+      addSpotBtn: document.getElementById("addSpotBtn"),
+      resetBtn: document.getElementById("resetBtn"),
+      settingsBtn: document.getElementById("settingsBtn"),
+      toast: document.getElementById("toast")
+    };
+
+    boot();
+
+    function boot() {
+      renderAll();
+      initMap();
+      setupEvents();
+      setupSpeech();
+      renderChat();
+    }
+
+    function setupEvents() {
+      els.sheetBackdrop.addEventListener("click", closeDetailSheet);
+      els.modalBackdrop.addEventListener("click", closeModals);
+      els.mapToggleBtn.addEventListener("click", toggleMap);
+      els.nearbyBtn.addEventListener("click", () => searchNearby());
+	      els.placeSearchInput.addEventListener("keydown", event => {
+	        if (event.key === "Enter") searchNearby(els.placeSearchInput.value);
+	      });
+	      els.itinerarySearchBtn.addEventListener("click", () => searchItineraryPlaces());
+	      els.itinerarySearchInput.addEventListener("keydown", event => {
+	        if (event.key === "Enter") searchItineraryPlaces();
+	      });
+      els.chatFab.addEventListener("click", openChat);
+      els.closeChatBtn.addEventListener("click", closeChat);
+      els.sendChatBtn.addEventListener("click", sendChat);
+      els.chatInput.addEventListener("keydown", event => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          sendChat();
+        }
+      });
+      els.clearChatBtn.addEventListener("click", () => {
+        if (!confirm("确认清空对话历史？")) return;
+        state.chat = [];
+        saveChat();
+        renderChat();
+      });
+      els.addSpotBtn.addEventListener("click", () => openSpotForm());
+      els.resetBtn.addEventListener("click", resetItinerary);
+      els.settingsBtn.addEventListener("click", openSettings);
+    }
+
+    function renderAll() {
+      renderHero();
+      renderDayTabs();
+      renderTimeline();
+      renderLibrary();
+      updateMap();
+    }
+
+    function renderHero() {
+      const { trip } = state.itinerary;
+      els.tripTitle.textContent = trip.title;
+      els.tripDates.textContent = trip.dates;
+      els.tripHotel.textContent = trip.hotel;
+      els.tripTravelers.textContent = `${trip.travelers}人`;
+    }
+
+    function renderDayTabs() {
+      els.dayTabs.innerHTML = "";
+      state.itinerary.days.forEach(day => {
+        const btn = document.createElement("button");
+        btn.className = `day-tab${day.id === state.activeDayId ? " active" : ""}`;
+        btn.innerHTML = `${day.label}<br><small>${day.date.slice(5).replace("-", ".")}</small>`;
+        btn.addEventListener("click", () => {
+          state.activeDayId = day.id;
+          state.selectedSpotId = day.spots[0]?.id || null;
+          renderAll();
+          focusSpotOnMap(state.selectedSpotId, false);
+        });
+        els.dayTabs.appendChild(btn);
+      });
+    }
+
+    function renderTimeline() {
+      const day = getActiveDay();
+      const total = day.spots.reduce((sum, spot) => sum + Number(spot.duration || 0), 0);
+      els.dayTitle.textContent = `${day.label} · ${formatDateLabel(day.date)}`;
+      els.dayNote.textContent = day.note;
+      els.dayStats.innerHTML = `${day.spots.length}个景点<br>${Math.round(total / 60 * 10) / 10}小时`;
+      els.timeline.innerHTML = "";
+
+      day.spots.forEach((spot, index) => {
+        if (index > 0) {
+          const bridge = document.createElement("div");
+          const transport = spot.transport || {};
+          bridge.className = "transport-link";
+          bridge.textContent = `${transport.method || "🚃 交通"} · ${transport.duration || "待确认"}`;
+          els.timeline.appendChild(bridge);
+        }
+
+        const card = document.createElement("article");
+        card.className = `spot-card${state.selectedSpotId === spot.id ? " active" : ""}`;
+        card.dataset.spotId = spot.id;
+	        card.dataset.index = index;
+	        card.innerHTML = `
+	          <div class="spot-head">
+	            <button class="drag-handle" aria-label="拖动排序" title="按住拖动排序">⋮⋮</button>
+	            <button class="spot-time" aria-label="修改时间">${escapeHtml(spot.time || "--:--")}</button>
+	            <div class="spot-title">
+	              <h3>${spot.icon || "📍"} ${escapeHtml(spot.name)}</h3>
+	              ${spot.nameJa ? `<span class="spot-ja">${escapeHtml(spot.nameJa)}</span>` : ""}
+	              <p>${escapeHtml(spot.desc || "")}</p>
+	            </div>
+	            <button class="more-btn" aria-label="更多操作">⋯</button>
+          </div>
+          <div class="tag-row">
+            <span class="tag">${escapeHtml(spot.category || "景点")}</span>
+            ${warningHtml(spot.warning)}
+          </div>
+        `;
+	        card.addEventListener("click", event => {
+	          if (event.target.closest(".more-btn, .spot-time, .drag-handle")) return;
+	          selectSpot(spot.id, true);
+	        });
+	        card.querySelector(".spot-time").addEventListener("click", event => {
+	          event.stopPropagation();
+	          openTimeEditor(spot.id);
+	        });
+	        card.querySelector(".more-btn").addEventListener("click", event => {
+	          event.stopPropagation();
+	          openActionMenu(spot.id);
+	        });
+	        attachDragHandlers(card.querySelector(".drag-handle"), card);
+	        els.timeline.appendChild(card);
+	      });
+	    }
+
+    function renderLibrary() {
+      els.libraryGrid.innerHTML = "";
+      OPTIONAL_SPOTS.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "library-card";
+        card.innerHTML = `
+	          <div>
+	            <strong>${item.icon} ${escapeHtml(item.name)}</strong>
+	            ${item.nameJa ? `<span class="spot-ja">${escapeHtml(item.nameJa)}</span>` : ""}
+	            <span>${escapeHtml(item.category)} · ${escapeHtml(item.desc)}</span>
+	            <div class="tag-row">${warningHtml(item.warning)}</div>
+          </div>
+          <button class="btn small secondary">加入</button>
+        `;
+        card.querySelector("button").addEventListener("click", () => addLibrarySpot(item));
+        els.libraryGrid.appendChild(card);
+      });
+    }
+
+    function selectSpot(spotId, openSheet) {
+      state.selectedSpotId = spotId;
+      renderTimeline();
+      focusSpotOnMap(spotId, true);
+      if (openSheet) openDetailSheet(spotId);
+    }
+
+    function openDetailSheet(spotId) {
+      const spot = findSpot(spotId);
+      if (!spot) return;
+      state.selectedSpotId = spotId;
+      const ticket = spot.ticket || {};
+      const transport = spot.transport || {};
+      els.detailSheet.innerHTML = `
+        <div class="grabber"></div>
+	        <div class="sheet-title">
+	          <div>
+	            <h2>${spot.icon || "📍"} ${escapeHtml(spot.name)}</h2>
+	            ${spot.nameJa ? `<p class="spot-ja">${escapeHtml(spot.nameJa)}</p>` : ""}
+	            <div class="tag-row">
+	              <span class="tag">${escapeHtml(spot.category || "景点")}</span>
+	              ${warningHtml(spot.warning)}
+	            </div>
+          </div>
+          <button class="btn icon ghost" id="closeSheetBtn">×</button>
+        </div>
+        <div class="detail-grid">
+	          <div class="detail-block"><h3>简介</h3><p>${escapeHtml(spot.desc || "暂无简介")}</p></div>
+	          <div class="detail-block">
+	            <h3>日本名与地址</h3>
+	            <p>${escapeHtml(spot.nameJa || spot.name)}<br>${escapeHtml(spot.address || "暂无地址")}</p>
+	            <div class="copy-row">
+	              <button class="btn small secondary" id="copyJaBtn">复制日本名</button>
+	              <button class="btn small green" id="copyAddressInlineBtn">复制地址</button>
+	              <button class="btn small ghost" id="copyJaAddressBtn">复制名称+地址</button>
+	            </div>
+	          </div>
+	          <div class="detail-block"><h3>交通方式</h3><p>从 ${escapeHtml(transport.from || "上一站")} 出发，${escapeHtml(transport.method || "交通待确认")}，${escapeHtml(transport.duration || "时间待确认")}，费用 ${escapeHtml(transport.cost || "待确认")}。</p></div>
+          <div class="detail-block"><h3>门票信息</h3><p>${escapeHtml(ticket.price || "待确认")} · ${ticket.reservation ? "需要预约" : "无需预约"} ${ticket.url ? `· <a href="${escapeAttr(ticket.url)}" target="_blank" rel="noreferrer">购票/官网</a>` : ""}</p></div>
+          <div class="detail-block"><h3>最佳时段</h3><p>${escapeHtml(spot.bestTime || "按当天节奏安排")}</p></div>
+          <div class="detail-block"><h3>旅行贴士</h3><ul>${(spot.tips || []).map(tip => `<li>${escapeHtml(tip)}</li>`).join("") || "<li>暂无</li>"}</ul></div>
+        </div>
+        <div class="sheet-actions">
+          <button class="btn secondary" id="sheetMapBtn">地图查看</button>
+          <button class="btn green" id="copyAddressBtn">复制地址</button>
+          <button class="btn danger" id="removeSpotBtn">移除</button>
+        </div>
+      `;
+      document.getElementById("closeSheetBtn").addEventListener("click", closeDetailSheet);
+      document.getElementById("sheetMapBtn").addEventListener("click", () => {
+        expandMap();
+        focusSpotOnMap(spot.id, true);
+      });
+	      document.getElementById("copyAddressBtn").addEventListener("click", () => copyText(spot.address || spot.name));
+	      document.getElementById("copyJaBtn").addEventListener("click", () => copyText(spot.nameJa || spot.name, "日本名已复制"));
+	      document.getElementById("copyAddressInlineBtn").addEventListener("click", () => copyText(spot.address || spot.name, "地址已复制"));
+	      document.getElementById("copyJaAddressBtn").addEventListener("click", () => copyText(`${spot.nameJa || spot.name}\n${spot.address || ""}`.trim(), "名称和地址已复制"));
+	      document.getElementById("removeSpotBtn").addEventListener("click", () => removeSpot(spot.id));
+      els.sheetBackdrop.classList.add("show");
+      els.detailSheet.classList.add("show");
+    }
+
+    function closeDetailSheet() {
+      els.sheetBackdrop.classList.remove("show");
+      els.detailSheet.classList.remove("show");
+    }
+
+	    function openActionMenu(spotId) {
+      const spot = findSpot(spotId);
+      const day = getDayBySpot(spotId);
+      if (!spot || !day) return;
+      els.spotModal.innerHTML = `
+        <h2>${spot.icon || "📍"} ${escapeHtml(spot.name)}</h2>
+        <div class="form-grid">
+          <button class="btn secondary" id="editSpotAction">编辑</button>
+          <button class="btn ghost" id="moveUpAction">上移</button>
+          <button class="btn ghost" id="moveDownAction">下移</button>
+          <div class="field">
+            <label>移到其他Day</label>
+            <select id="moveDaySelect">${state.itinerary.days.map(d => `<option value="${d.id}" ${d.id === day.id ? "selected" : ""}>${d.label} · ${d.date}</option>`).join("")}</select>
+          </div>
+          <button class="btn green" id="moveDayAction">移动</button>
+          <button class="btn danger" id="deleteSpotAction">删除</button>
+          <button class="btn ghost" id="cancelAction">取消</button>
+        </div>
+      `;
+      openModal(els.spotModal);
+      document.getElementById("editSpotAction").addEventListener("click", () => openSpotForm(spotId));
+      document.getElementById("moveUpAction").addEventListener("click", () => moveSpotWithinDay(spotId, -1));
+      document.getElementById("moveDownAction").addEventListener("click", () => moveSpotWithinDay(spotId, 1));
+      document.getElementById("moveDayAction").addEventListener("click", () => moveSpotToDay(spotId, Number(document.getElementById("moveDaySelect").value)));
+      document.getElementById("deleteSpotAction").addEventListener("click", () => removeSpot(spotId));
+	      document.getElementById("cancelAction").addEventListener("click", closeModals);
+	    }
+
+	    function openTimeEditor(spotId) {
+	      const spot = findSpot(spotId);
+	      if (!spot) return;
+	      els.spotModal.innerHTML = `
+	        <h2>修改时间</h2>
+	        <form class="form-grid" id="timeForm">
+	          <div>
+	            <strong>${spot.icon || "📍"} ${escapeHtml(spot.name)}</strong>
+	            ${spot.nameJa ? `<span class="spot-ja">${escapeHtml(spot.nameJa)}</span>` : ""}
+	          </div>
+	          <div class="two-col">
+	            ${field("time", "开始时间", spot.time || "12:00", "time")}
+	            ${field("duration", "停留分钟", spot.duration || 60, "number")}
+	          </div>
+	          <div class="modal-actions">
+	            <button class="btn ghost" type="button" id="cancelTimeForm">取消</button>
+	            <button class="btn" type="submit">保存时间</button>
+	          </div>
+	        </form>
+	      `;
+	      openModal(els.spotModal);
+	      document.getElementById("cancelTimeForm").addEventListener("click", closeModals);
+	      document.getElementById("timeForm").addEventListener("submit", event => {
+	        event.preventDefault();
+	        const form = new FormData(event.currentTarget);
+	        spot.time = String(form.get("time") || spot.time || "12:00");
+	        spot.duration = Number(form.get("duration") || spot.duration || 60);
+	        state.selectedSpotId = spot.id;
+	        closeModals();
+	        saveItinerary();
+	        renderAll();
+	        focusSpotOnMap(spot.id, false);
+	        showToast("时间已更新");
+	      });
+	    }
+
+	    function openSpotForm(spotId) {
+      const spot = spotId ? findSpot(spotId) : null;
+      const currentDay = spotId ? getDayBySpot(spotId) : getActiveDay();
+      const data = spot || {
+        id: `custom-${Date.now()}`,
+	        name: "",
+	        nameJa: "",
+	        icon: "📍",
+        time: "12:00",
+        duration: 60,
+        lat: currentDay.spots.at(-1)?.lat || 35.6812,
+        lng: currentDay.spots.at(-1)?.lng || 139.7671,
+        category: "自定义",
+        address: "",
+        desc: "",
+        transport: { from: "", method: "🚃 电车", duration: "待确认", cost: "待确认" },
+        ticket: { price: "待确认", reservation: false, url: "" },
+        bestTime: "",
+        tips: []
+      };
+      els.spotModal.innerHTML = `
+        <h2>${spot ? "编辑景点" : "添加景点"}</h2>
+        <form class="form-grid" id="spotForm">
+          <div class="two-col">
+            ${field("time", "时间", data.time, "time")}
+            ${field("duration", "停留分钟", data.duration, "number")}
+          </div>
+          <div class="two-col">
+            ${field("icon", "Emoji", data.icon)}
+            ${field("category", "类型", data.category)}
+	          </div>
+	          ${field("name", "名称", data.name)}
+	          ${field("nameJa", "日本名", data.nameJa || getJapaneseName(data.name))}
+	          ${field("address", "地址", data.address || "")}
+          <div class="two-col">
+            ${field("lat", "纬度", data.lat, "number", "0.000001")}
+            ${field("lng", "经度", data.lng, "number", "0.000001")}
+          </div>
+          <div class="field"><label>简介</label><textarea name="desc">${escapeHtml(data.desc || "")}</textarea></div>
+          <div class="two-col">
+            ${field("transportFrom", "从哪里来", data.transport?.from || "")}
+            ${field("transportMethod", "交通方式", data.transport?.method || "")}
+          </div>
+          <div class="two-col">
+            ${field("transportDuration", "交通时间", data.transport?.duration || "")}
+            ${field("transportCost", "交通费用", data.transport?.cost || "")}
+          </div>
+          <div class="two-col">
+            ${field("ticketPrice", "门票价格", data.ticket?.price || "")}
+            ${field("ticketUrl", "购票链接", data.ticket?.url || "", "url")}
+          </div>
+          <div class="field"><label>是否需要预约</label><select name="reservation"><option value="false">无需预约</option><option value="true" ${data.ticket?.reservation ? "selected" : ""}>需要预约</option></select></div>
+          ${field("bestTime", "最佳时段", data.bestTime || "")}
+          <div class="field"><label>贴士（每行一条）</label><textarea name="tips">${escapeHtml((data.tips || []).join("\n"))}</textarea></div>
+          <div class="field"><label>警告标签</label><select name="warningLevel"><option value="">无</option><option value="red" ${data.warning?.level === "red" ? "selected" : ""}>红色：需提前购票</option><option value="yellow" ${data.warning?.level === "yellow" ? "selected" : ""}>黄色：黄金周注意</option><option value="green" ${data.warning?.level === "green" ? "selected" : ""}>绿色：预订确认</option></select></div>
+          ${field("warningText", "警告文字", data.warning?.text || "")}
+          <div class="modal-actions">
+            <button class="btn ghost" type="button" id="cancelSpotForm">取消</button>
+            <button class="btn" type="submit">保存</button>
+          </div>
+        </form>
+      `;
+      openModal(els.spotModal);
+      document.getElementById("cancelSpotForm").addEventListener("click", closeModals);
+      document.getElementById("spotForm").addEventListener("submit", event => {
+        event.preventDefault();
+        saveSpotForm(new FormData(event.currentTarget), spotId, currentDay.id, data.id);
+      });
+    }
+
+    function saveSpotForm(form, spotId, dayId, fallbackId) {
+      const warningLevel = form.get("warningLevel");
+      const nextSpot = {
+	        id: spotId || fallbackId,
+	        name: String(form.get("name") || "未命名景点").trim(),
+	        nameJa: String(form.get("nameJa") || getJapaneseName(form.get("name")) || "").trim(),
+	        icon: String(form.get("icon") || "📍").trim(),
+        time: String(form.get("time") || "12:00"),
+        duration: Number(form.get("duration") || 60),
+        lat: Number(form.get("lat") || 35.6812),
+        lng: Number(form.get("lng") || 139.7671),
+        category: String(form.get("category") || "自定义").trim(),
+        address: String(form.get("address") || "").trim(),
+        desc: String(form.get("desc") || "").trim(),
+        transport: {
+          from: String(form.get("transportFrom") || "").trim(),
+          method: String(form.get("transportMethod") || "").trim(),
+          duration: String(form.get("transportDuration") || "").trim(),
+          cost: String(form.get("transportCost") || "").trim()
+        },
+        ticket: {
+          price: String(form.get("ticketPrice") || "").trim(),
+          reservation: form.get("reservation") === "true",
+          url: String(form.get("ticketUrl") || "").trim()
+        },
+        bestTime: String(form.get("bestTime") || "").trim(),
+        tips: String(form.get("tips") || "").split("\n").map(item => item.trim()).filter(Boolean),
+        warning: warningLevel ? { level: warningLevel, text: String(form.get("warningText") || "").trim() } : null
+      };
+
+      const day = getDay(dayId);
+      if (!day) return;
+      const index = day.spots.findIndex(item => item.id === spotId);
+      if (index >= 0) day.spots[index] = nextSpot;
+      else day.spots.push(nextSpot);
+      state.selectedSpotId = nextSpot.id;
+      persistAndRender("已保存景点");
+      closeModals();
+      focusSpotOnMap(nextSpot.id, true);
+    }
+
+    function addLibrarySpot(item) {
+      const day = getActiveDay();
+      const copy = deepClone(item);
+      copy.id = `custom-${Date.now()}`;
+      copy.time = suggestNextTime(day);
+      copy.transport = {
+        from: day.spots.at(-1)?.name || "上一站",
+        method: "🚃 电车/步行",
+        duration: "待确认",
+        cost: "待确认"
+      };
+      day.spots.push(copy);
+      state.selectedSpotId = copy.id;
+      persistAndRender(`${copy.name} 已加入 ${day.label}`);
+    }
+
+    function removeSpot(spotId) {
+      removeSpotById(spotId, true);
+    }
+
+    function moveSpotWithinDay(spotId, delta) {
+      const day = getDayBySpot(spotId);
+      if (!day) return;
+      const index = day.spots.findIndex(item => item.id === spotId);
+      const nextIndex = index + delta;
+      if (index < 0 || nextIndex < 0 || nextIndex >= day.spots.length) {
+        showToast("已经到边界了");
+        return;
+      }
+      const [spot] = day.spots.splice(index, 1);
+      day.spots.splice(nextIndex, 0, spot);
+      closeModals();
+      persistAndRender("顺序已调整");
+    }
+
+    function moveSpotToDay(spotId, targetDayId) {
+      const sourceDay = getDayBySpot(spotId);
+      const targetDay = getDay(targetDayId);
+      if (!sourceDay || !targetDay) return;
+      if (sourceDay.id === targetDay.id) {
+        showToast("景点已在这个 Day");
+        return;
+      }
+      const index = sourceDay.spots.findIndex(item => item.id === spotId);
+      const [spot] = sourceDay.spots.splice(index, 1);
+      spot.transport = { ...spot.transport, from: targetDay.spots.at(-1)?.name || "上一站" };
+      targetDay.spots.push(spot);
+      state.activeDayId = targetDay.id;
+      state.selectedSpotId = spot.id;
+      closeModals();
+      persistAndRender(`已移动到 ${targetDay.label}`);
+    }
+
+	    function attachDragHandlers(handle, card) {
+	      handle.addEventListener("pointerdown", event => {
+	        if (event.button != null && event.button !== 0) return;
+	        event.preventDefault();
+	        event.stopPropagation();
+	        window.clearTimeout(state.drag.timer);
+	        state.drag = {
+	          timer: null,
+	          sourceIndex: Number(card.dataset.index),
+	          spotId: card.dataset.spotId,
+	          active: false,
+	          moved: false
+	        };
+	        beginCardDrag(card.dataset.spotId);
+	        window.addEventListener("pointermove", handleDragMove, { passive: false });
+	        window.addEventListener("pointerup", endCardDrag, { once: true });
+	        window.addEventListener("pointercancel", endCardDrag, { once: true });
+	      });
+	    }
+
+	    function beginCardDrag(spotId) {
+	      state.drag.active = true;
+	      document.querySelector(`[data-spot-id="${CSS.escape(spotId)}"]`)?.classList.add("dragging");
+	      if (navigator.vibrate) navigator.vibrate(30);
+	    }
+
+	    function handleDragMove(event) {
+	      if (!state.drag.active) return;
+	      event.preventDefault();
+	      const target = document.elementFromPoint(event.clientX, event.clientY)?.closest(".spot-card");
+	      if (!target) return;
+	      const targetIndex = Number(target.dataset.index);
+	      if (!Number.isFinite(targetIndex) || targetIndex === state.drag.sourceIndex) return;
+	      reorderByIndex(state.drag.sourceIndex, targetIndex);
+	      state.drag.sourceIndex = targetIndex;
+	      state.drag.moved = true;
+	      document.querySelector(`[data-spot-id="${CSS.escape(state.drag.spotId)}"]`)?.classList.add("dragging");
+	    }
+
+	    function endCardDrag() {
+	      window.clearTimeout(state.drag.timer);
+	      window.removeEventListener("pointermove", handleDragMove);
+	      document.querySelectorAll(".spot-card.dragging").forEach(card => card.classList.remove("dragging"));
+	      if (state.drag.active && state.drag.moved) {
+	        saveItinerary();
+	        renderAll();
+	        showToast("拖拽排序已保存");
+	      }
+	      state.drag = { timer: null, sourceIndex: null, active: false, moved: false, spotId: null };
+	    }
+
+    function reorderByIndex(from, to) {
+      const day = getActiveDay();
+      if (from === to || from < 0 || to < 0) return;
+	      const [spot] = day.spots.splice(from, 1);
+	      day.spots.splice(to, 0, spot);
+	      renderTimeline();
+	      updateMap();
+	    }
+
+	    function initMap() {
+	      loadGoogleMaps()
+	        .then(initGoogleMap)
+	        .catch(error => {
+	          console.warn("Google Maps unavailable, falling back to Leaflet.", error);
+	          if (state.settings.googleMapsKey) {
+	            showToast("Google Maps 暂不可用，已切换 Leaflet 备用地图");
+	          }
+	          initLeafletMap();
+	        });
+	    }
+
+	    function loadGoogleMaps() {
+	      const googleMapsKey = String(state.settings.googleMapsKey || "").trim();
+	      if (!googleMapsKey) return Promise.reject(new Error("Missing Google Maps API key"));
+	      if (window.google?.maps) return Promise.resolve();
+	      return new Promise((resolve, reject) => {
+        const callbackName = `initGoogleMaps_${Date.now()}`;
+        window.gm_authFailure = () => {
+          handleGoogleMapsFailure("Google Maps API Key 未授权，请检查 API、Billing 和 localhost referrer 限制");
+          reject(new Error("Google Maps authorization failed"));
+        };
+        window[callbackName] = () => {
+          delete window[callbackName];
+          resolve();
+	        };
+	        const script = document.createElement("script");
+	        script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(googleMapsKey)}&libraries=places&loading=async&callback=${callbackName}`;
+        script.async = true;
+        script.defer = true;
+        script.onerror = () => {
+          delete window[callbackName];
+          reject(new Error("Google Maps script failed to load"));
+        };
+        document.head.appendChild(script);
+      });
+    }
+
+    function handleGoogleMapsFailure(message) {
+      if (state.mapProvider === "leaflet") return;
+      showToast(message);
+      state.mapProvider = "";
+      state.map = null;
+      state.placesService = null;
+      state.markers.clear();
+      state.resultMarkers = [];
+      state.routeLine = null;
+      document.getElementById("map").innerHTML = "";
+      initLeafletMap();
+    }
+
+    function initGoogleMap() {
+      state.mapProvider = "google";
+      state.map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: 35.6812, lng: 139.7671 },
+        zoom: 12,
+        mapTypeControl: false,
+        fullscreenControl: false,
+        streetViewControl: false,
+        gestureHandling: "greedy",
+        styles: [
+          { featureType: "poi.business", stylers: [{ visibility: "simplified" }] },
+          { featureType: "transit", stylers: [{ visibility: "simplified" }] }
+        ]
+      });
+      state.placesService = new google.maps.places.PlacesService(state.map);
+      updateMap();
+      setTimeout(() => google.maps.event.trigger(state.map, "resize"), 250);
+    }
+
+    function initLeafletMap() {
+      if (!window.L) {
+        showToast("Leaflet 未加载，地图暂不可用");
+        return;
+      }
+      state.mapProvider = "leaflet";
+      state.map = L.map("map", { zoomControl: false }).setView([35.6812, 139.7671], 12);
+      L.control.zoom({ position: "bottomright" }).addTo(state.map);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "&copy; OpenStreetMap"
+      }).addTo(state.map);
+      updateMap();
+      setTimeout(() => state.map.invalidateSize(), 250);
+    }
+
+    function updateMap() {
+      if (!state.map) return;
+      clearTripMarkers();
+      clearRouteLine();
+      const day = getActiveDay();
+      const latLngs = [];
+      day.spots.forEach((spot, index) => {
+        if (!Number.isFinite(spot.lat) || !Number.isFinite(spot.lng)) return;
+        if (state.mapProvider === "google") {
+          const marker = new google.maps.Marker({
+            position: { lat: spot.lat, lng: spot.lng },
+            map: state.map,
+            title: spot.name,
+            label: String(index + 1)
+          });
+	          const infoWindow = new google.maps.InfoWindow({
+	            content: `<strong>${index + 1}. ${escapeHtml(spot.name)}</strong><br>${escapeHtml(spot.nameJa || "")}<br>${escapeHtml(spot.time || "")}`
+	          });
+          marker.addListener("click", () => {
+            state.selectedSpotId = spot.id;
+            renderTimeline();
+            scrollSpotIntoView(spot.id);
+            infoWindow.open({ anchor: marker, map: state.map });
+          });
+          state.markers.set(spot.id, { marker, infoWindow });
+          latLngs.push({ lat: spot.lat, lng: spot.lng });
+        } else {
+	          const marker = L.marker([spot.lat, spot.lng], { title: spot.name }).addTo(state.map);
+	          marker.bindPopup(`<strong>${index + 1}. ${escapeHtml(spot.name)}</strong><br>${escapeHtml(spot.nameJa || "")}<br>${escapeHtml(spot.time || "")}`);
+          marker.on("click", () => {
+            state.selectedSpotId = spot.id;
+            renderTimeline();
+            scrollSpotIntoView(spot.id);
+            marker.openPopup();
+          });
+          state.markers.set(spot.id, marker);
+          latLngs.push([spot.lat, spot.lng]);
+        }
+      });
+      fitRoute(latLngs);
+    }
+
+    function clearTripMarkers() {
+      state.markers.forEach(item => {
+        if (state.mapProvider === "google") item.marker.setMap(null);
+        else item.remove();
+      });
+      state.markers.clear();
+    }
+
+    function clearRouteLine() {
+      if (!state.routeLine) return;
+      if (state.mapProvider === "google") state.routeLine.setMap(null);
+      else state.routeLine.remove();
+      state.routeLine = null;
+    }
+
+    function fitRoute(latLngs) {
+      if (!latLngs.length) return;
+      if (state.mapProvider === "google") {
+        if (latLngs.length > 1) {
+          state.routeLine = new google.maps.Polyline({
+            path: latLngs,
+            map: state.map,
+            strokeColor: "#534AB7",
+            strokeOpacity: 0.72,
+            strokeWeight: 4
+          });
+          const bounds = new google.maps.LatLngBounds();
+          latLngs.forEach(point => bounds.extend(point));
+          state.map.fitBounds(bounds, 48);
+        } else {
+          state.map.setCenter(latLngs[0]);
+          state.map.setZoom(13);
+        }
+      } else if (latLngs.length > 1) {
+        state.routeLine = L.polyline(latLngs, { color: "#534AB7", weight: 4, opacity: 0.72 }).addTo(state.map);
+        state.map.fitBounds(state.routeLine.getBounds(), { padding: [28, 28] });
+      } else {
+        state.map.setView(latLngs[0], 13);
+      }
+    }
+
+    function focusSpotOnMap(spotId, openPopup) {
+      if (!state.map || !spotId) return;
+      const spot = findSpot(spotId);
+      const markerItem = state.markers.get(spotId);
+      if (!spot || !markerItem) return;
+      if (state.mapProvider === "google") {
+        state.map.panTo({ lat: spot.lat, lng: spot.lng });
+        state.map.setZoom(15);
+        if (openPopup) markerItem.infoWindow.open({ anchor: markerItem.marker, map: state.map });
+        setTimeout(() => google.maps.event.trigger(state.map, "resize"), 220);
+      } else {
+        state.map.flyTo([spot.lat, spot.lng], 15, { duration: 0.6 });
+        if (openPopup) markerItem.openPopup();
+        setTimeout(() => state.map.invalidateSize(), 220);
+      }
+    }
+
+	    function toggleMap() {
+	      els.mapDrawer.classList.toggle("expanded");
+	      const expanded = els.mapDrawer.classList.contains("expanded");
+	      els.mapToggleBtn.textContent = expanded ? "›" : "‹";
+	      els.mapToggleBtn.setAttribute("aria-label", expanded ? "收起地图" : "展开地图");
+	      els.mapToggleBtn.setAttribute("aria-expanded", String(expanded));
+	      refreshMapSize();
+	    }
+
+	    function expandMap() {
+	      els.mapDrawer.classList.add("expanded");
+	      els.mapToggleBtn.textContent = "›";
+	      els.mapToggleBtn.setAttribute("aria-label", "收起地图");
+	      els.mapToggleBtn.setAttribute("aria-expanded", "true");
+	      refreshMapSize();
+	    }
+
+    function refreshMapSize() {
+      setTimeout(() => {
+        if (!state.map) return;
+        if (state.mapProvider === "google") google.maps.event.trigger(state.map, "resize");
+        else state.map.invalidateSize();
+      }, 320);
+    }
+
+	    async function searchNearby(rawKeyword) {
+	      expandMap();
+	      const selected = findSpot(state.selectedSpotId) || getActiveDay().spots[0];
+      if (!selected) return;
+      const keyword = (rawKeyword || els.placeSearchInput.value || "便利店 餐厅 药店").trim();
+      els.searchResults.classList.add("show");
+      els.searchResults.innerHTML = `<div class="result-card"><strong>搜索中...</strong><span>以 ${escapeHtml(selected.name)} 为中心 500m</span></div>`;
+      clearResultMarkers();
+      try {
+        const results = state.mapProvider === "google" && state.placesService
+          ? await googlePlacesSearch(keyword, selected.lat, selected.lng)
+          : await overpassSearch(keyword, selected.lat, selected.lng);
+        renderSearchResults(results, selected, keyword);
+      } catch (error) {
+	        els.searchResults.innerHTML = `<div class="result-card"><strong>附近搜索失败</strong><span>${escapeHtml(error.message || "地点搜索暂不可用，请稍后再试。")}</span></div>`;
+	      }
+	    }
+
+	    async function searchItineraryPlaces() {
+	      const keyword = els.itinerarySearchInput.value.trim();
+	      if (!keyword) {
+	        showToast("请输入想搜索的地点");
+	        return;
+	      }
+	      const origin = getItinerarySearchOrigin();
+	      els.itinerarySearchResults.classList.add("show");
+	      els.itinerarySearchResults.innerHTML = `<div class="result-card"><strong>搜索中...</strong><span>以 ${escapeHtml(origin.name)} 为中心查找</span></div>`;
+	      try {
+	        const known = findKnownSearchResult(keyword, origin);
+	        const results = known ? [known] : await searchPlacesForItinerary(keyword, origin);
+	        renderItinerarySearchResults(results, origin, keyword);
+	      } catch (error) {
+	        els.itinerarySearchResults.innerHTML = `<div class="result-card"><strong>搜索失败</strong><span>${escapeHtml(error.message || "地点搜索暂不可用，请稍后再试。")}</span></div>`;
+	      }
+	    }
+
+	    function getItinerarySearchOrigin() {
+	      const day = getActiveDay();
+	      const last = day.spots.at(-1);
+	      return last || {
+	        id: "hotel-origin",
+	        name: "柏悦酒店",
+	        nameJa: "パークハイアット東京",
+	        lat: 35.6856,
+	        lng: 139.6907,
+	        address: "Park Hyatt Tokyo, 3-7-1-2 Nishi Shinjuku, Tokyo"
+	      };
+	    }
+
+	    async function searchPlacesForItinerary(keyword, origin) {
+	      if (state.mapProvider === "google" && state.placesService) {
+	        try {
+	          const googleResults = await googleTextSearch(keyword, origin.lat, origin.lng);
+	          if (googleResults.length) return googleResults;
+	        } catch (error) {
+	          console.warn("Google Text Search failed, falling back to Overpass.", error);
+	        }
+	      }
+	      return overpassSearch(keyword, origin.lat, origin.lng, 2500);
+	    }
+
+	    function googleTextSearch(keyword, lat, lng) {
+	      return new Promise((resolve, reject) => {
+	        const request = {
+	          query: `${keyword} Tokyo Japan`,
+	          location: new google.maps.LatLng(lat, lng),
+	          radius: 12000
+	        };
+	        state.placesService.textSearch(request, (places, status) => {
+	          if (status !== google.maps.places.PlacesServiceStatus.OK && status !== google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+	            reject(new Error(`Google Places 返回 ${status}`));
+	            return;
+	          }
+	          resolve((places || []).slice(0, 8).map(place => normalizeGooglePlace(place, lat, lng)));
+	        });
+	      });
+	    }
+
+	    function findKnownSearchResult(keyword, origin) {
+	      const template = getKnownSpotTemplate(keyword) || findOptionalSpotByNameLoose(keyword);
+	      if (!template) return null;
+	      return {
+	        id: `known-${Date.now()}`,
+	        name: template.name,
+	        nameJa: template.nameJa || getJapaneseName(template.name),
+	        lat: template.lat,
+	        lng: template.lng,
+	        category: template.category,
+	        address: template.address,
+	        distance: distanceMeters(origin.lat, origin.lng, template.lat, template.lng),
+	        desc: template.desc,
+	        rating: null,
+	        openNow: null
+	      };
+	    }
+
+	    function renderItinerarySearchResults(results, origin, keyword) {
+	      if (!results.length) {
+	        els.itinerarySearchResults.innerHTML = `<div class="result-card"><strong>没有找到结果</strong><span>可以换个关键词，比如东京大学、拉面、便利店。</span></div>`;
+	        return;
+	      }
+	      const day = getActiveDay();
+	      els.itinerarySearchResults.innerHTML = "";
+	      results.forEach(result => {
+	        const card = document.createElement("div");
+	        card.className = "result-card";
+	        const openText = result.openNow === true ? "营业中" : result.openNow === false ? "可能未营业" : "营业状态未知";
+	        const ratingText = result.rating ? `${result.rating}分` : "暂无评分";
+	        card.innerHTML = `
+	          <div>
+	            <strong>${escapeHtml(result.name)}</strong>
+	            <span class="ja">${escapeHtml(result.nameJa || getJapaneseName(result.name) || result.name)}</span>
+	            <span>${Math.round(result.distance || 0)}m · ${escapeHtml(result.category || "地点")} · ${ratingText} · ${openText}</span>
+	            <span>${escapeHtml(result.address || "地址待确认")}</span>
+	          </div>
+	          <button class="btn small secondary">加入 ${escapeHtml(day.label)}</button>
+	        `;
+	        card.querySelector("button").addEventListener("click", () => addSearchResultToDay(result, origin, keyword));
+	        els.itinerarySearchResults.appendChild(card);
+	      });
+	    }
+
+	    function addSearchResultToDay(result, origin, keyword) {
+	      const day = getActiveDay();
+	      const spot = {
+	        id: `search-${Date.now()}`,
+	        name: result.name,
+	        nameJa: result.nameJa || getJapaneseName(result.name) || result.name,
+	        icon: iconForCategory(result.category),
+	        time: suggestNextTime(day),
+	        duration: 60,
+	        lat: result.lat,
+	        lng: result.lng,
+	        category: result.category || "地点",
+	        address: result.address || "",
+	        desc: result.desc || `通过主页搜索「${keyword}」加入的地点，距离 ${origin.name} 约 ${Math.round(result.distance || 0)}m。`,
+	        transport: { from: origin.name, method: "🚶 步行/电车", duration: "待确认", cost: "待确认" },
+	        ticket: { price: "按项目", reservation: false, url: "" },
+	        bestTime: "按当天动线安排",
+	        tips: ["搜索数据可能不完整，出发前建议确认营业时间和预约要求"]
+	      };
+	      day.spots.push(spot);
+	      state.selectedSpotId = spot.id;
+	      saveItinerary();
+	      renderAll();
+	      focusSpotOnMap(spot.id, true);
+	      showToast(`${spot.name} 已加入 ${day.label}`);
+	      openTimeEditor(spot.id);
+	    }
+
+	    function googlePlacesSearch(keyword, lat, lng) {
+      return new Promise((resolve, reject) => {
+        const request = {
+          location: new google.maps.LatLng(lat, lng),
+          radius: 500,
+          keyword,
+          type: keywordToGooglePlaceType(keyword)
+        };
+        state.placesService.nearbySearch(request, (places, status) => {
+          if (status !== google.maps.places.PlacesServiceStatus.OK && status !== google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+            reject(new Error(`Google Places 返回 ${status}`));
+            return;
+          }
+          resolve((places || []).slice(0, 12).map(place => normalizeGooglePlace(place, lat, lng)));
+        });
+      });
+    }
+
+    function keywordToGooglePlaceType(keyword) {
+      const text = keyword.toLowerCase();
+      if (text.includes("便利") || text.includes("超商")) return "convenience_store";
+      if (text.includes("药") || text.includes("藥") || text.includes("drug")) return "pharmacy";
+      if (text.includes("咖啡") || text.includes("coffee")) return "cafe";
+      if (text.includes("餐") || text.includes("饭") || text.includes("食") || text.includes("拉面")) return "restaurant";
+      return undefined;
+    }
+
+    function normalizeGooglePlace(place, originLat, originLng) {
+      const lat = place.geometry?.location?.lat();
+      const lng = place.geometry?.location?.lng();
+      return {
+        id: place.place_id || `google-${Date.now()}`,
+	        name: place.name || "未命名地点",
+	        nameJa: getJapaneseName(place.name || ""),
+	        lat,
+        lng,
+        category: (place.types || [])[0] || "place",
+        address: place.vicinity || place.formatted_address || "",
+        distance: distanceMeters(originLat, originLng, lat, lng),
+        rating: place.rating,
+        openNow: place.opening_hours?.open_now
+      };
+    }
+
+	    async function overpassSearch(keyword, lat, lng, radius = 500) {
+	      const filters = keywordToOverpassFilters(keyword);
+	      const query = `
+	        [out:json][timeout:18];
+	        (
+	          ${filters.map(filter => `node(around:${radius},${lat},${lng})${filter};way(around:${radius},${lat},${lng})${filter};`).join("\n")}
+	        );
+        out center 18;
+      `;
+      const url = "https://overpass-api.de/api/interpreter";
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        body: new URLSearchParams({ data: query })
+      });
+      if (!response.ok) throw new Error(`Overpass 返回 ${response.status}`);
+      const data = await response.json();
+      return (data.elements || [])
+        .map(item => normalizeOverpassItem(item, lat, lng))
+        .filter(item => item.name)
+        .sort((a, b) => a.distance - b.distance)
+        .slice(0, 12);
+    }
+
+    function keywordToOverpassFilters(keyword) {
+      const text = keyword.toLowerCase();
+      if (text.includes("拉面")) return ['["cuisine"~"ramen",i]', '["name"~"ramen|ラーメン|らーめん",i]'];
+      if (text.includes("便利") || text.includes("超商")) return ['["shop"="convenience"]'];
+      if (text.includes("药") || text.includes("藥") || text.includes("drug")) return ['["amenity"="pharmacy"]', '["shop"="chemist"]'];
+      if (text.includes("咖啡") || text.includes("coffee")) return ['["amenity"="cafe"]'];
+      if (text.includes("餐") || text.includes("饭") || text.includes("食")) return ['["amenity"="restaurant"]', '["amenity"="fast_food"]'];
+      return ['["amenity"~"restaurant|cafe|fast_food|pharmacy"]', '["shop"~"convenience|chemist"]'];
+    }
+
+    function normalizeOverpassItem(item, originLat, originLng) {
+      const lat = item.lat || item.center?.lat;
+      const lng = item.lon || item.center?.lon;
+      const tags = item.tags || {};
+      return {
+	        id: `poi-${item.type}-${item.id}`,
+	        name: tags.name || tags["name:ja"] || tags.brand || "",
+	        nameJa: tags["name:ja"] || tags.name || tags.brand || "",
+	        lat,
+        lng,
+        category: tags.amenity || tags.shop || tags.tourism || "POI",
+        address: [tags["addr:street"], tags["addr:housenumber"]].filter(Boolean).join(" "),
+        distance: distanceMeters(originLat, originLng, lat, lng)
+      };
+    }
+
+    function renderSearchResults(results, origin, keyword) {
+      if (!results.length) {
+        els.searchResults.innerHTML = `<div class="result-card"><strong>没有找到结果</strong><span>可以换个关键词，比如拉面、便利店、药妆。</span></div>`;
+        return;
+      }
+      els.searchResults.innerHTML = "";
+      results.forEach(result => {
+        const marker = createResultMarker(result);
+        state.resultMarkers.push(marker);
+        const card = document.createElement("div");
+        card.className = "result-card";
+        const openText = result.openNow === true ? "营业中" : result.openNow === false ? "可能未营业" : "营业状态未知";
+        const ratingText = result.rating ? `${result.rating}分` : "暂无评分";
+        card.innerHTML = `
+          <div>
+	            <strong>${escapeHtml(result.name)}</strong>
+	            <span class="ja">${escapeHtml(result.nameJa || result.name)}</span>
+	            <span>${Math.round(result.distance)}m · ${escapeHtml(result.category)} · ${ratingText} · ${openText}</span>
+          </div>
+          <button class="btn small secondary">加入</button>
+        `;
+        card.addEventListener("click", event => {
+          if (event.target.tagName === "BUTTON") return;
+          focusResultMarker(result, marker);
+        });
+        card.querySelector("button").addEventListener("click", () => addPoiToToday(result, origin, keyword));
+        els.searchResults.appendChild(card);
+      });
+    }
+
+    function createResultMarker(result) {
+      if (state.mapProvider === "google") {
+        const marker = new google.maps.Marker({
+          position: { lat: result.lat, lng: result.lng },
+          map: state.map,
+          title: result.name,
+          icon: "https://maps.google.com/mapfiles/ms/icons/green-dot.png"
+        });
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<strong>${escapeHtml(result.name)}</strong><br>${Math.round(result.distance)}m`
+        });
+        marker.addListener("click", () => infoWindow.open({ anchor: marker, map: state.map }));
+        return { marker, infoWindow };
+      }
+      const marker = L.marker([result.lat, result.lng]).addTo(state.map);
+      marker.bindPopup(`<strong>${escapeHtml(result.name)}</strong><br>${Math.round(result.distance)}m`);
+      return marker;
+    }
+
+    function focusResultMarker(result, markerItem) {
+      if (state.mapProvider === "google") {
+        state.map.panTo({ lat: result.lat, lng: result.lng });
+        state.map.setZoom(17);
+        markerItem.infoWindow.open({ anchor: markerItem.marker, map: state.map });
+      } else {
+        state.map.flyTo([result.lat, result.lng], 17);
+        markerItem.openPopup();
+      }
+    }
+
+    function addPoiToToday(result, origin, keyword) {
+      const day = getActiveDay();
+      day.spots.push({
+	        id: `poi-${Date.now()}`,
+	        name: result.name,
+	        nameJa: result.nameJa || getJapaneseName(result.name) || result.name,
+	        icon: "📍",
+        time: suggestNextTime(day),
+        duration: 45,
+        lat: result.lat,
+        lng: result.lng,
+        category: result.category,
+        address: result.address || "",
+        desc: `通过附近搜索「${keyword}」加入的地点，距离 ${origin.name} 约 ${Math.round(result.distance)}m。`,
+        transport: { from: origin.name, method: "🚶 步行/电车", duration: "待确认", cost: "待确认" },
+        ticket: { price: "按消费", reservation: false, url: "" },
+        bestTime: "按当天动线安排",
+        tips: ["营业状态来自开放地图数据，建议出发前再次确认"]
+      });
+      persistAndRender("已加入今日行程");
+    }
+
+    function clearResultMarkers() {
+      state.resultMarkers.forEach(marker => {
+        if (state.mapProvider === "google") marker.marker.setMap(null);
+        else marker.remove();
+      });
+      state.resultMarkers = [];
+    }
+
+    function openChat() {
+      els.chatOverlay.classList.add("show");
+      renderChat();
+      setTimeout(() => els.chatInput.focus(), 120);
+    }
+
+    function closeChat() {
+      els.chatOverlay.classList.remove("show");
+    }
+
+    async function sendChat() {
+      const text = els.chatInput.value.trim();
+      if (!text) return;
+      if (!state.settings.claudeKey) {
+        showToast("请先在设置中填写 Claude API Key");
+        openSettings();
+        return;
+      }
+      state.chat.push({ role: "user", content: text });
+      els.chatInput.value = "";
+      saveChat();
+      renderChat();
+      if (isAffirmativeMessage(text)) {
+        const applied = applyLatestPendingAction();
+        if (applied) return;
+      }
+      const loading = { role: "assistant", content: "正在查询行程..." };
+      state.chat.push(loading);
+      renderChat();
+      try {
+        const reply = await callClaude(text);
+        loading.content = reply.reply;
+        loading.actions = reply.actions || [];
+      } catch (error) {
+        loading.content = `Claude 调用失败：${error.message || "浏览器可能阻止了前端直连 Anthropic API。后续可改为 /api/chat 后端代理。"}`;
+        loading.actions = [];
+      }
+      saveChat();
+      renderChat();
+    }
+
+    async function callClaude(latestText) {
+      const messages = state.chat
+        .filter(item => item.content !== "正在查询行程...")
+        .slice(-12)
+        .map(item => ({ role: item.role, content: item.content }));
+
+      const tools = [
+        {
+          name: "add_spot",
+          description: "向行程中新增一个景点。当用户要求加入新地点时调用。",
+          input_schema: {
+            type: "object",
+            properties: {
+              title: { type: "string", description: "操作卡片标题" },
+              reason: { type: "string", description: "建议加入的理由" },
+              dayId: { type: "number", description: "目标天数 ID（1-4）" },
+              insertAfterSpotId: { type: "string", description: "插入到哪个景点 ID 之后，留空则追加末尾" },
+              spot: {
+                type: "object",
+                description: "景点详情",
+                properties: {
+	                  name: { type: "string" }, nameJa: { type: "string" }, icon: { type: "string" },
+                  time: { type: "string" }, duration: { type: "number" },
+                  lat: { type: "number" }, lng: { type: "number" },
+                  category: { type: "string" }, address: { type: "string" }, desc: { type: "string" },
+                  transport: { type: "object", properties: { from: { type: "string" }, method: { type: "string" }, duration: { type: "string" }, cost: { type: "string" } } },
+                  ticket: { type: "object", properties: { price: { type: "string" }, reservation: { type: "boolean" }, url: { type: "string" } } },
+                  bestTime: { type: "string" }, tips: { type: "array", items: { type: "string" } }
+                },
+                required: ["name"]
+              }
+            },
+            required: ["dayId", "spot"]
+          }
+        },
+	        {
+	          name: "reorder_day",
+	          description: "重新排列某天的景点顺序或调整各景点时间。当用户要求重排当天动线、调整行程顺序时调用。",
+          input_schema: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              reason: { type: "string" },
+              dayId: { type: "number" },
+              orderedSpots: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    spotId: { type: "string" }, name: { type: "string" },
+                    time: { type: "string" }, duration: { type: "number" }
+                  }
+                }
+              }
+            },
+	            required: ["dayId", "orderedSpots"]
+	          }
+	        },
+	        {
+	          name: "replace_day",
+	          description: "一次性替换某一天的完整行程列表。当用户说某天换成 A 到 B 到 C、保留晚餐/酒店/某个地点，或需要批量新增、移除、排序多个景点时调用。必须把替换后的最终景点列表按顺序完整传入，只调用这一个工具，不要拆成多个 add_spot/update_spot。",
+	          input_schema: {
+	            type: "object",
+	            properties: {
+	              title: { type: "string" },
+	              reason: { type: "string" },
+	              dayId: { type: "number" },
+	              spots: {
+	                type: "array",
+	                description: "替换后的当天完整景点列表，按最终顺序排列。保留的已有景点也必须包含进来，并尽量带 spotId。",
+	                items: {
+	                  type: "object",
+	                  properties: {
+	                    spotId: { type: "string", description: "如保留或修改已有景点，填写已有景点 ID" },
+	                    name: { type: "string" }, nameJa: { type: "string" }, icon: { type: "string" },
+	                    time: { type: "string" }, duration: { type: "number" },
+	                    lat: { type: "number" }, lng: { type: "number" },
+	                    category: { type: "string" }, address: { type: "string" }, desc: { type: "string" },
+	                    bestTime: { type: "string" },
+	                    tips: { type: "array", items: { type: "string" } },
+	                    transport: { type: "object", properties: { from: { type: "string" }, method: { type: "string" }, duration: { type: "string" }, cost: { type: "string" } } },
+	                    ticket: { type: "object", properties: { price: { type: "string" }, reservation: { type: "boolean" }, url: { type: "string" } } }
+	                  },
+	                  required: ["name"]
+	                }
+	              }
+	            },
+	            required: ["dayId", "spots"]
+	          }
+	        },
+	        {
+	          name: "update_spot",
+	          description: "更新某个已有景点的字段（时间、时长、描述、交通等）。当用户要求修改某景点具体信息时调用。",
+          input_schema: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              reason: { type: "string" },
+              spotId: { type: "string", description: "景点 ID，如 d2s3" },
+              updates: {
+                type: "object",
+                description: "要更新的字段（只写需要改的）",
+                properties: {
+	                  name: { type: "string" }, nameJa: { type: "string" }, icon: { type: "string" },
+                  time: { type: "string" }, duration: { type: "number" },
+                  category: { type: "string" }, address: { type: "string" },
+                  desc: { type: "string" }, bestTime: { type: "string" },
+                  tips: { type: "array", items: { type: "string" } },
+                  transport: { type: "object" }, ticket: { type: "object" }
+                }
+              }
+            },
+            required: ["spotId", "updates"]
+          }
+        },
+        {
+          name: "remove_spot",
+          description: "从行程中移除一个景点。当用户明确要求删除某景点时调用。",
+          input_schema: {
+            type: "object",
+            properties: {
+              title: { type: "string" },
+              reason: { type: "string" },
+              spotId: { type: "string" }
+            },
+            required: ["spotId"]
+          }
+        }
+      ];
+
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": state.settings.claudeKey,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514",
+	          max_tokens: 2500,
+          tools,
+          tool_choice: { type: "auto" },
+          system: `你是中文东京旅行助手，专门服务这次东京私人旅行（2026年5月2日-5月5日黄金周）。回答具体、简洁、可执行。完整行程 JSON：${JSON.stringify(state.itinerary)}
+
+	当用户请求需要修改行程（新增景点、重排顺序、更新信息、删除景点）时，调用对应工具，工具调用后附上自然语言说明。不需要修改行程时，直接文字回复即可。
+	重要：如果用户要求“某天换成 A → B → C”“只保留晚饭/酒店/机场”“一次性调整多个景点”，必须优先调用 replace_day，并在 spots 中给出当天最终完整列表；保留的已有地点也要放入列表，最好带原 spotId。不要把这类请求拆成多个 add_spot 或 update_spot。`,
+          messages: messages.length ? messages : [{ role: "user", content: latestText }]
+        })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(data.error?.message || `HTTP ${response.status}`);
+      }
+
+      const content = data.content || [];
+      const reply = content.filter(part => part.type === "text").map(part => part.text).join("\n").trim();
+      const actions = content
+        .filter(part => part.type === "tool_use")
+        .map(part => normalizeChatAction(buildActionFromToolUse(part)))
+        .filter(Boolean);
+
+      return {
+        reply: reply || (actions.length ? "我来帮你调整行程，请确认下方建议。" : "我没有拿到有效回复。"),
+        actions
+      };
+    }
+
+    function buildActionFromToolUse(part) {
+      const input = part.input || {};
+      if (part.name === "add_spot") {
+        return { type: "add_spot", title: input.title || "加入行程", reason: input.reason || "",
+          proposal: { dayId: input.dayId, insertAfterSpotId: input.insertAfterSpotId || "", spot: input.spot } };
+      }
+	      if (part.name === "reorder_day") {
+	        return { type: "reorder_day", title: input.title || "调整行程顺序", reason: input.reason || "",
+	          proposal: { dayId: input.dayId, orderedSpots: input.orderedSpots } };
+	      }
+	      if (part.name === "replace_day") {
+	        return { type: "replace_day", title: input.title || "整体替换当天行程", reason: input.reason || "",
+	          proposal: { dayId: input.dayId, spots: input.spots } };
+	      }
+      if (part.name === "update_spot") {
+        return { type: "update_spot", title: input.title || "更新景点", reason: input.reason || "",
+          proposal: { spotId: input.spotId, updates: input.updates } };
+      }
+      if (part.name === "remove_spot") {
+        return { type: "remove_spot", title: input.title || "移除景点", reason: input.reason || "",
+          proposal: { spotId: input.spotId } };
+      }
+      return null;
+    }
+
+    function renderChat() {
+      els.chatLog.innerHTML = "";
+      if (!state.chat.length) {
+        const intro = document.createElement("div");
+        intro.className = "message";
+        intro.innerHTML = renderSpotLinks("可以问我：晴空塔门票怎么买、从浅草寺到SATO Briand要多久、5月3日下午还有时间去秋叶原吗。");
+        els.chatLog.appendChild(intro);
+      }
+      state.chat.forEach(item => {
+        hydrateAssistantMessage(item);
+        const bubble = document.createElement("div");
+        bubble.className = `message ${item.role === "user" ? "user" : "assistant"}`;
+        if (item.role === "assistant") {
+          bubble.innerHTML = `
+            <div class="message-inner">
+              <div>${renderSpotLinks(item.content)}</div>
+              ${renderChatActions(item)}
+            </div>
+          `;
+        } else {
+          bubble.textContent = item.content;
+        }
+        els.chatLog.appendChild(bubble);
+      });
+      els.chatLog.querySelectorAll("[data-spot-link]").forEach(link => {
+        link.addEventListener("click", () => {
+          const spot = findSpotByName(link.dataset.spotLink);
+          if (!spot) return;
+          const day = getDayBySpot(spot.id);
+          state.activeDayId = day.id;
+          closeChat();
+          renderAll();
+          selectSpot(spot.id, true);
+        });
+      });
+      els.chatLog.querySelectorAll("[data-chat-action-approve]").forEach(button => {
+        button.addEventListener("click", () => executeChatAction(button.dataset.chatActionApprove));
+      });
+      els.chatLog.querySelectorAll("[data-chat-action-dismiss]").forEach(button => {
+        button.addEventListener("click", () => dismissChatAction(button.dataset.chatActionDismiss));
+      });
+      els.chatLog.scrollTop = els.chatLog.scrollHeight;
+    }
+
+    function hydrateAssistantMessage(item) {
+      if (item.role !== "assistant" || item.actions?.length) return;
+      const parsed = parseClaudeResponse(item.content);
+      if (!parsed.actions.length) return;
+      item.content = parsed.reply;
+      item.actions = parsed.actions;
+      saveChat();
+    }
+
+    function renderChatActions(item) {
+      if (!Array.isArray(item.actions) || !item.actions.length) return "";
+      return item.actions.map(action => {
+        const proposal = action.proposal || {};
+        const spot = proposal.spot || proposal.orderedSpots?.[0] || {};
+	        const statusText = action.status === "applied"
+	          ? (action.type === "replace_day" ? "已更新行程" : "已加入行程")
+	          : action.status === "dismissed"
+	            ? "已忽略"
+	            : "等待确认";
+	        const actionLabel = action.type === "add_spot"
+	          ? "加入行程"
+	          : action.type === "remove_spot"
+	            ? "移除景点"
+	            : action.type === "replace_day"
+	              ? "应用整天调整"
+	              : "应用调整";
+        const secondaryMeta = summarizeChatAction(action, proposal, spot);
+        const buttons = action.status === "pending"
+          ? `<div class="chat-action-buttons">
+              <button class="btn small green" data-chat-action-approve="${escapeAttr(action.id)}">${actionLabel}</button>
+              <button class="btn small ghost" data-chat-action-dismiss="${escapeAttr(action.id)}">先不要</button>
+            </div>`
+          : "";
+        return `
+          <div class="chat-action-card">
+            <strong>${escapeHtml(action.title || "建议加入行程")}</strong>
+            <p>${escapeHtml(action.reason || `${spot.name || "这个地点"}适合加入当前行程。`)}</p>
+            <div class="chat-action-meta">${escapeHtml(getDay(proposal.dayId)?.label || `Day ${proposal.dayId || ""}`)} · ${escapeHtml(secondaryMeta)} · ${escapeHtml(statusText)}</div>
+            ${buttons}
+          </div>
+        `;
+      }).join("");
+    }
+
+	    function summarizeChatAction(action, proposal, spot) {
+	      if (action.type === "reorder_day") return `${proposal.orderedSpots?.length || 0}项排序调整`;
+	      if (action.type === "replace_day") return `${proposal.spots?.length || 0}个景点整体替换`;
+	      if (action.type === "update_spot") {
+	        const target = findSpot(proposal.spotId);
+	        const changed = Object.keys(proposal.updates || {}).join(" / ") || "字段更新";
+        return `${target?.name || proposal.spotId} · ${changed}`;
+      }
+      if (action.type === "remove_spot") {
+        const target = findSpot(proposal.spotId);
+        return `${target?.name || proposal.spotId} · 将从行程移除`;
+      }
+      return `${spot.name || "未命名地点"} · ${spot.time || "待定"}`;
+    }
+
+    function renderSpotLinks(text) {
+      let html = escapeHtml(text || "");
+      getAllSpots()
+        .sort((a, b) => b.name.length - a.name.length)
+        .forEach(spot => {
+          const escaped = escapeRegExp(escapeHtml(spot.name));
+          html = html.replace(new RegExp(escaped, "g"), `<span class="spot-link" data-spot-link="${escapeAttr(spot.name)}">${escapeHtml(spot.name)}</span>`);
+        });
+      return html;
+    }
+
+    function parseClaudeResponse(rawText) {
+      const parsed = extractJsonObject(rawText);
+      if (!parsed) {
+        const heuristic = extractTextualReorderSuggestion(rawText);
+        return heuristic || { reply: rawText, actions: [] };
+      }
+      const reply = String(parsed.reply || rawText).trim();
+      const actions = Array.isArray(parsed.actions) ? parsed.actions.map(normalizeChatAction).filter(Boolean) : [];
+      return { reply, actions };
+    }
+
+    function normalizeChatAction(action) {
+      if (!action || !action.type) return null;
+      if (action.type === "add_spot" && action.proposal?.spot?.name) {
+        return {
+          id: `chat-action-${nextChatActionSeq()}`,
+          type: "add_spot",
+          title: String(action.title || "加入行程"),
+          reason: String(action.reason || ""),
+          status: "pending",
+          proposal: {
+            dayId: Number(action.proposal.dayId || 1),
+            insertAfterSpotId: action.proposal.insertAfterSpotId || "",
+            spot: normalizeProposedSpot(action.proposal.spot)
+          }
+        };
+      }
+      if (action.type === "reorder_day" && Array.isArray(action.proposal?.orderedSpots) && action.proposal.orderedSpots.length) {
+        return {
+          id: `chat-action-${nextChatActionSeq()}`,
+          type: "reorder_day",
+          title: String(action.title || "调整行程顺序"),
+          reason: String(action.reason || ""),
+          status: "pending",
+          proposal: {
+            dayId: Number(action.proposal.dayId || 1),
+            orderedSpots: action.proposal.orderedSpots.map(normalizeOrderedSpot).filter(Boolean)
+	          }
+	        };
+	      }
+	      if (action.type === "replace_day" && Array.isArray(action.proposal?.spots) && action.proposal.spots.length) {
+	        const dayId = Number(action.proposal.dayId || 1);
+	        const spots = action.proposal.spots
+	          .map(spot => normalizeReplacementSpot(spot, dayId))
+	          .filter(Boolean);
+	        if (!spots.length) return null;
+	        return {
+	          id: `chat-action-${nextChatActionSeq()}`,
+	          type: "replace_day",
+	          title: String(action.title || "整体替换当天行程"),
+	          reason: String(action.reason || ""),
+	          status: "pending",
+	          proposal: { dayId, spots }
+	        };
+	      }
+	      if (action.type === "update_spot" && action.proposal?.spotId && action.proposal?.updates) {
+	        return {
+	          id: `chat-action-${nextChatActionSeq()}`,
+          type: "update_spot",
+          title: String(action.title || "更新景点"),
+          reason: String(action.reason || ""),
+          status: "pending",
+          proposal: {
+            spotId: String(action.proposal.spotId).trim(),
+            updates: normalizeSpotUpdates(action.proposal.updates)
+          }
+        };
+      }
+      if (action.type === "remove_spot" && action.proposal?.spotId) {
+        return {
+          id: `chat-action-${nextChatActionSeq()}`,
+          type: "remove_spot",
+          title: String(action.title || "移除景点"),
+          reason: String(action.reason || ""),
+          status: "pending",
+          proposal: {
+            spotId: String(action.proposal.spotId).trim()
+          }
+        };
+      }
+      return null;
+    }
+
+    function normalizeSpotUpdates(updates) {
+      const next = {};
+	      const simpleFields = ["name", "nameJa", "icon", "time", "category", "address", "desc", "bestTime"];
+      simpleFields.forEach(key => {
+        if (updates[key] != null) next[key] = String(updates[key]).trim();
+      });
+      if (updates.duration != null) next.duration = Number(updates.duration);
+      if (updates.lat != null) next.lat = Number(updates.lat);
+      if (updates.lng != null) next.lng = Number(updates.lng);
+      if (Array.isArray(updates.tips)) next.tips = updates.tips.map(item => String(item).trim()).filter(Boolean);
+      if (updates.transport) {
+        next.transport = {
+          from: updates.transport.from != null ? String(updates.transport.from).trim() : undefined,
+          method: updates.transport.method != null ? String(updates.transport.method).trim() : undefined,
+          duration: updates.transport.duration != null ? String(updates.transport.duration).trim() : undefined,
+          cost: updates.transport.cost != null ? String(updates.transport.cost).trim() : undefined
+        };
+      }
+      if (updates.ticket) {
+        next.ticket = {
+          price: updates.ticket.price != null ? String(updates.ticket.price).trim() : undefined,
+          reservation: updates.ticket.reservation == null ? undefined : Boolean(updates.ticket.reservation),
+          url: updates.ticket.url != null ? String(updates.ticket.url).trim() : undefined
+        };
+      }
+      return next;
+    }
+
+    function normalizeOrderedSpot(spot) {
+      if (!spot || (!spot.spotId && !spot.name)) return null;
+      return {
+        spotId: String(spot.spotId || "").trim(),
+        name: String(spot.name || "").trim(),
+        time: String(spot.time || "").trim(),
+        duration: spot.duration == null ? null : Number(spot.duration)
+      };
+    }
+
+	    function normalizeProposedSpot(spot) {
+	      return {
+	        id: `ai-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+	        name: String(spot.name || "未命名地点").trim(),
+	        nameJa: String(spot.nameJa || getJapaneseName(spot.name) || spot.name || "").trim(),
+	        icon: String(spot.icon || "📍").trim(),
+        time: String(spot.time || "20:00").trim(),
+        duration: Number(spot.duration || 45),
+        lat: Number(spot.lat || 35.6812),
+        lng: Number(spot.lng || 139.7671),
+        category: String(spot.category || "景点").trim(),
+        address: String(spot.address || "").trim(),
+        desc: String(spot.desc || "").trim(),
+        transport: {
+          from: String(spot.transport?.from || "上一站").trim(),
+          method: String(spot.transport?.method || "🚶 步行/电车").trim(),
+          duration: String(spot.transport?.duration || "待确认").trim(),
+          cost: String(spot.transport?.cost || "待确认").trim()
+        },
+        ticket: {
+          price: String(spot.ticket?.price || "按项目").trim(),
+          reservation: Boolean(spot.ticket?.reservation),
+          url: String(spot.ticket?.url || "").trim()
+        },
+        bestTime: String(spot.bestTime || "按当天动线安排").trim(),
+	        tips: Array.isArray(spot.tips) ? spot.tips.map(item => String(item).trim()).filter(Boolean) : ["加入前建议确认营业时间"]
+	      };
+	    }
+
+	    function normalizeReplacementSpot(spot, dayId) {
+	      if (!spot || (!spot.name && !spot.spotId)) return null;
+	      const spotId = String(spot.spotId || "").trim();
+	      const name = String(spot.name || "").trim();
+	      const day = getDay(dayId);
+	      const existing = findSpot(spotId)
+	        || day?.spots.find(item => sameSpotName(item.name, name))
+	        || findSpotByNameLoose(name);
+	      const libraryTemplate = existing
+	        || findOptionalSpotByNameLoose(name)
+	        || getKnownSpotTemplate(name);
+	      const base = libraryTemplate ? deepClone(libraryTemplate) : normalizeProposedSpot(spot);
+	      if (!existing) {
+	        base.id = spotId || `ai-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+	      }
+	      const updates = normalizeSpotUpdates(spot);
+	      Object.entries(updates).forEach(([key, value]) => {
+	        if (value == null) return;
+	        if (key === "transport") base.transport = { ...(base.transport || {}), ...omitUndefined(value) };
+	        else if (key === "ticket") base.ticket = { ...(base.ticket || {}), ...omitUndefined(value) };
+	        else base[key] = value;
+	      });
+	      if (!base.name) base.name = name || "未命名地点";
+	      if (!base.nameJa) base.nameJa = String(spot.nameJa || getJapaneseName(base.name) || "").trim();
+	      if (!base.icon) base.icon = "📍";
+	      if (!base.time) base.time = "待定";
+	      if (!Number.isFinite(Number(base.duration))) base.duration = 45;
+	      if (!Number.isFinite(Number(base.lat))) base.lat = 35.6812;
+	      if (!Number.isFinite(Number(base.lng))) base.lng = 139.7671;
+	      if (!base.category) base.category = "景点";
+	      if (!base.transport) base.transport = { from: "上一站", method: "🚶 步行/电车", duration: "待确认", cost: "待确认" };
+	      if (!base.ticket) base.ticket = { price: "按项目", reservation: false, url: "" };
+	      if (!Array.isArray(base.tips)) base.tips = [];
+	      return base;
+	    }
+
+	    function sameSpotName(left, right) {
+	      return normalizeNameForMatch(left) === normalizeNameForMatch(right);
+	    }
+
+	    function normalizeNameForMatch(name) {
+	      return String(name || "").replace(/\s+/g, "").replace(/晚餐|午餐|早餐/g, "").toLowerCase();
+	    }
+
+	    function findSpotByNameLoose(name) {
+	      const normalized = normalizeNameForMatch(name);
+	      return getAllSpots().find(spot => normalizeNameForMatch(spot.name) === normalized);
+	    }
+
+	    function findOptionalSpotByNameLoose(name) {
+	      const normalized = normalizeNameForMatch(name);
+	      return OPTIONAL_SPOTS.find(spot => normalizeNameForMatch(spot.name) === normalized);
+	    }
+
+	    function getKnownSpotTemplate(name) {
+	      const templates = {
+	        "东京大学": {
+	          id: "known-tokyo-university",
+	          name: "东京大学",
+	          nameJa: "東京大学",
+	          icon: "🎓",
+	          time: "10:00",
+	          duration: 90,
+	          lat: 35.7138,
+	          lng: 139.7627,
+	          category: "校园",
+	          address: "7 Chome-3-1 Hongo, Bunkyo City, Tokyo",
+	          desc: "东京大学本乡校区以赤门、安田讲堂和银杏大道闻名，适合作为上野、浅草方向前的文化散步起点。",
+	          transport: { from: "上一站", method: "🚇 地铁", duration: "待确认", cost: "待确认" },
+	          ticket: { price: "免费", reservation: false, url: "" },
+	          bestTime: "上午",
+	          tips: ["校园内保持安静", "赤门和安田讲堂适合拍照"]
+	        }
+	      };
+	      return templates[String(name || "").trim()] || null;
+	    }
+
+    function applyLatestPendingAction() {
+      const latest = [...state.chat].reverse().find(item => item.role === "assistant" && item.actions?.some(action => action.status === "pending"));
+      const action = latest?.actions.find(item => item.status === "pending");
+      if (!action) return false;
+      executeChatAction(action.id, true);
+      return true;
+    }
+
+    function executeChatAction(actionId, fromConfirmationText = false) {
+      const located = locateChatAction(actionId);
+      if (!located || located.action.status !== "pending") return;
+      if (located.action.type === "add_spot") {
+        addProposedSpotToItinerary(located.action.proposal);
+        finalizeAppliedChatAction(located.action, `${located.action.proposal.spot.name} 已加入 ${getDay(located.action.proposal.dayId)?.label || "行程"}。`, fromConfirmationText);
+        return;
+      }
+	      if (located.action.type === "reorder_day") {
+	        applyReorderProposal(located.action.proposal);
+	        finalizeAppliedChatAction(located.action, `${getDay(located.action.proposal.dayId)?.label || "当天行程"} 已按建议重新排序。`, fromConfirmationText);
+	        return;
+	      }
+	      if (located.action.type === "replace_day") {
+	        applyReplaceDayProposal(located.action.proposal);
+	        finalizeAppliedChatAction(located.action, `${getDay(located.action.proposal.dayId)?.label || "当天行程"} 已按建议整体替换。`, fromConfirmationText);
+	        return;
+	      }
+	      if (located.action.type === "update_spot") {
+	        applySpotUpdates(located.action.proposal);
+	        const target = findSpot(located.action.proposal.spotId);
+        finalizeAppliedChatAction(located.action, `${target?.name || "该景点"} 已按建议更新。`, fromConfirmationText);
+        return;
+      }
+      if (located.action.type === "remove_spot") {
+        removeSpotById(located.action.proposal.spotId, false);
+        finalizeAppliedChatAction(located.action, `已从行程移除该景点。`, fromConfirmationText);
+      }
+    }
+
+    function finalizeAppliedChatAction(action, message, fromConfirmationText) {
+      action.status = "applied";
+      saveChat();
+      renderChat();
+      state.chat.push({
+        role: "assistant",
+        content: `${message}${fromConfirmationText ? "你刚才直接回复确认，我们已经帮你改好了。" : ""}`
+      });
+      saveChat();
+      renderChat();
+    }
+
+    function dismissChatAction(actionId) {
+      const located = locateChatAction(actionId);
+      if (!located || located.action.status !== "pending") return;
+      located.action.status = "dismissed";
+      saveChat();
+      renderChat();
+      showToast("这条建议先不加入");
+    }
+
+    function locateChatAction(actionId) {
+      for (const message of state.chat) {
+        if (!Array.isArray(message.actions)) continue;
+        const action = message.actions.find(item => item.id === actionId);
+        if (action) return { message, action };
+      }
+      return null;
+    }
+
+    function addProposedSpotToItinerary(proposal) {
+      const day = getDay(proposal.dayId) || getActiveDay();
+      const nextSpot = deepClone(proposal.spot);
+      const index = day.spots.findIndex(item => item.id === proposal.insertAfterSpotId);
+      if (!nextSpot.time) nextSpot.time = suggestInsertedTime(day, proposal.insertAfterSpotId, nextSpot.duration);
+      if (index >= 0) day.spots.splice(index + 1, 0, nextSpot);
+      else day.spots.push(nextSpot);
+      state.activeDayId = day.id;
+      state.selectedSpotId = nextSpot.id;
+      saveItinerary();
+      renderAll();
+      showToast(`${nextSpot.name} 已加入 ${day.label}`);
+    }
+
+    function applySpotUpdates(proposal) {
+      const spot = findSpot(proposal.spotId);
+      if (!spot) return;
+      const updates = proposal.updates || {};
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value == null) return;
+        if (key === "transport") {
+          spot.transport = { ...(spot.transport || {}), ...omitUndefined(value) };
+        } else if (key === "ticket") {
+          spot.ticket = { ...(spot.ticket || {}), ...omitUndefined(value) };
+        } else {
+          spot[key] = value;
+        }
+      });
+      const day = getDayBySpot(spot.id);
+      state.activeDayId = day?.id || state.activeDayId;
+      state.selectedSpotId = spot.id;
+      saveItinerary();
+      renderAll();
+      showToast(`${spot.name} 已更新`);
+    }
+
+    function applyReorderProposal(proposal) {
+      const day = getDay(proposal.dayId) || getActiveDay();
+      const existing = day.spots.slice();
+      const usedIds = new Set();
+      const reordered = [];
+      proposal.orderedSpots.forEach(item => {
+        const match = existing.find(spot => (!usedIds.has(spot.id)) && (spot.id === item.spotId || spot.name === item.name));
+        if (!match) return;
+        usedIds.add(match.id);
+        if (item.time) match.time = item.time;
+        if (item.duration != null && Number.isFinite(item.duration)) match.duration = item.duration;
+        reordered.push(match);
+      });
+      existing.forEach(spot => {
+        if (!usedIds.has(spot.id)) reordered.push(spot);
+      });
+      day.spots = reordered;
+      state.activeDayId = day.id;
+      state.selectedSpotId = day.spots[0]?.id || null;
+      saveItinerary();
+      renderAll();
+	      showToast(`${day.label} 已重新排序`);
+	    }
+
+	    function applyReplaceDayProposal(proposal) {
+	      const day = getDay(proposal.dayId) || getActiveDay();
+	      const usedIds = new Set();
+	      const finalSpots = (proposal.spots || []).map(spot => {
+	        const nextSpot = deepClone(spot);
+	        if (!nextSpot.id || usedIds.has(nextSpot.id)) {
+	          nextSpot.id = `ai-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+	        }
+	        usedIds.add(nextSpot.id);
+	        if (!nextSpot.transport) nextSpot.transport = { from: "上一站", method: "🚶 步行/电车", duration: "待确认", cost: "待确认" };
+	        if (!nextSpot.ticket) nextSpot.ticket = { price: "按项目", reservation: false, url: "" };
+	        if (!Array.isArray(nextSpot.tips)) nextSpot.tips = [];
+	        return nextSpot;
+	      }).filter(spot => spot.name);
+	      if (!finalSpots.length) return;
+	      day.spots = finalSpots;
+	      state.activeDayId = day.id;
+	      state.selectedSpotId = day.spots[0]?.id || null;
+	      closeDetailSheet();
+	      saveItinerary();
+	      renderAll();
+	      showToast(`${day.label} 已整体更新`);
+	    }
+
+	    function removeSpotById(spotId, confirmRemoval = true) {
+      const day = getDayBySpot(spotId);
+      const spot = findSpot(spotId);
+      if (!day || !spot) return false;
+      if (confirmRemoval && !confirm(`确认从行程移除「${spot.name}」？`)) return false;
+      day.spots = day.spots.filter(item => item.id !== spotId);
+      state.selectedSpotId = day.spots[0]?.id || null;
+      closeDetailSheet();
+      closeModals();
+      saveItinerary();
+      renderAll();
+      if (confirmRemoval) showToast("已移除景点");
+      return true;
+    }
+
+    function suggestInsertedTime(day, afterSpotId, duration = 45) {
+      const anchor = day.spots.find(item => item.id === afterSpotId) || day.spots.at(-1);
+      if (!anchor?.time) return "20:00";
+      const [hour, minute] = anchor.time.split(":").map(Number);
+      const next = new Date(2026, 0, 1, hour || 20, minute || 0);
+      next.setMinutes(next.getMinutes() + Number(anchor.duration || duration) + 20);
+      return `${String(next.getHours()).padStart(2, "0")}:${String(next.getMinutes()).padStart(2, "0")}`;
+    }
+
+    function isAffirmativeMessage(text) {
+      const normalized = String(text || "").trim();
+      return /^(好|好的|可以|行|同意|加进去|加到行程|加入行程|安排上|就这个|那就它|确认加入|嗯|可以加|加上吧|就按这个改|就这样改|执行|确认|apply)[！!。.\s]*$/i.test(normalized)
+        || /(加到我的行程里|加到行程里|把.*加到.*行程|直接加进去|帮我加进去|就加这个|那就加吧|倒是把.*加到.*行程|按.*建议.*改|就这样.*执行)/i.test(normalized);
+    }
+
+    function extractJsonObject(rawText) {
+      if (!rawText) return null;
+      try {
+        return JSON.parse(rawText);
+      } catch (error) {
+        const cleaned = String(rawText)
+          .replace(/```json\s*/i, "")
+          .replace(/```/g, "")
+          .trim();
+        const start = cleaned.indexOf("{");
+        const end = cleaned.lastIndexOf("}");
+        if (start < 0 || end <= start) return extractLooseActionPayload(cleaned);
+        try {
+          return JSON.parse(cleaned.slice(start, end + 1));
+        } catch (innerError) {
+          return extractLooseActionPayload(cleaned);
+        }
+      }
+    }
+
+    function extractLooseActionPayload(rawText) {
+      const text = String(rawText || "");
+      if (!/"actions"\s*:/.test(text)) return null;
+      const replyMatch = text.match(/"reply"\s*:\s*"([\s\S]*?)"\s*,\s*"actions"\s*:/);
+      const addSpotMatch = text.match(/"type"\s*:\s*"add_spot"[\s\S]*?"title"\s*:\s*"([^"]+)"[\s\S]*?"reason"\s*:\s*"([^"]+)"[\s\S]*?"dayId"\s*:\s*(\d+)[\s\S]*?"insertAfterSpotId"\s*:\s*"([^"]*)"[\s\S]*?"spot"\s*:\s*\{([\s\S]*?)\}\s*\}\s*\]/);
+      if (replyMatch && addSpotMatch) {
+        const spotBlock = addSpotMatch[5];
+        const grab = (key, fallback = "") => {
+          const match = spotBlock.match(new RegExp(`"${key}"\\s*:\\s*"([\\s\\S]*?)"`));
+          return match ? match[1] : fallback;
+        };
+        const grabNum = (key, fallback = 0) => {
+          const match = spotBlock.match(new RegExp(`"${key}"\\s*:\\s*([\\d.]+)`));
+          return match ? Number(match[1]) : fallback;
+        };
+        return {
+          reply: replyMatch[1].replace(/\\"/g, "\""),
+          actions: [{
+            type: "add_spot",
+            title: addSpotMatch[1],
+            reason: addSpotMatch[2],
+            proposal: {
+              dayId: Number(addSpotMatch[3]),
+              insertAfterSpotId: addSpotMatch[4],
+	              spot: {
+	                name: grab("name", "未命名地点"),
+	                nameJa: grab("nameJa", ""),
+	                icon: grab("icon", "📍"),
+                time: grab("time", "20:00"),
+                duration: grabNum("duration", 45),
+                lat: grabNum("lat", 35.6812),
+                lng: grabNum("lng", 139.7671),
+                category: grab("category", "景点"),
+                address: grab("address", ""),
+                desc: grab("desc", ""),
+                transport: {
+                  from: "上一站",
+                  method: "🚶 步行/电车",
+                  duration: "待确认",
+                  cost: "待确认"
+                },
+                ticket: {
+                  price: "按项目",
+                  reservation: false,
+                  url: ""
+                },
+                bestTime: grab("bestTime", "按当天动线安排"),
+                tips: ["加入前建议确认营业时间"]
+              }
+            }
+          }]
+        };
+      }
+      return extractLooseReorderPayload(text, replyMatch?.[1] || "");
+    }
+
+    function extractLooseReorderPayload(text, replyText) {
+      const reorderMatch = text.match(/"type"\s*:\s*"reorder_day"[\s\S]*?"title"\s*:\s*"([^"]+)"[\s\S]*?"reason"\s*:\s*"([^"]+)"[\s\S]*?"dayId"\s*:\s*(\d+)[\s\S]*?"orderedSpots"\s*:\s*\[([\s\S]*?)\]/);
+      if (!reorderMatch) return null;
+      const spotMatches = [...reorderMatch[4].matchAll(/\{[\s\S]*?"spotId"\s*:\s*"([^"]*)"[\s\S]*?"name"\s*:\s*"([^"]*)"[\s\S]*?"time"\s*:\s*"([^"]*)"([\s\S]*?"duration"\s*:\s*([\d.]+))?[\s\S]*?\}/g)];
+      const orderedSpots = spotMatches.map(match => ({
+        spotId: match[1],
+        name: match[2],
+        time: match[3],
+        duration: match[5] ? Number(match[5]) : null
+      })).filter(item => item.spotId || item.name);
+      if (!orderedSpots.length) return null;
+      return {
+        reply: replyText.replace(/\\"/g, "\"") || text,
+        actions: [{
+          type: "reorder_day",
+          title: reorderMatch[1],
+          reason: reorderMatch[2],
+          proposal: {
+            dayId: Number(reorderMatch[3]),
+            orderedSpots
+          }
+        }]
+      };
+    }
+
+    function extractTextualReorderSuggestion(rawText) {
+      const text = String(rawText || "");
+      const dayMatch = text.match(/Day\s*(\d)/i);
+      const lines = text.split("\n").map(line => line.trim()).filter(Boolean);
+      const orderedSpots = [];
+      lines.forEach(line => {
+        const match = line.match(/^[-•]\s*(\d{1,2}:\d{2})(?:\s*-\s*(\d{1,2}:\d{2}))?\s+(.+)$/);
+        if (!match) return;
+        const label = match[3].replace(/\*\*/g, "").trim();
+        const known = getAllSpots().find(spot => label.includes(spot.name) || spot.name.includes(label));
+        if (!known) return;
+        const duration = match[2] ? diffMinutes(match[1], match[2]) : known.duration;
+        orderedSpots.push({
+          spotId: known.id,
+          name: known.name,
+          time: match[1],
+          duration
+        });
+      });
+      if (!dayMatch || orderedSpots.length < 2) return null;
+      const grab = (key, fallback = "") => {
+        const found = lines.find(line => line.includes(key));
+        return found || fallback;
+      };
+      return {
+        reply: text,
+        actions: [{
+          type: "reorder_day",
+          title: `调整 Day ${dayMatch[1]} 顺序`,
+          reason: grab("这样安排的好处", "根据聊天建议调整当天景点顺序和时间。"),
+          proposal: {
+            dayId: Number(dayMatch[1]),
+            orderedSpots
+          }
+        }]
+      };
+    }
+
+    function diffMinutes(start, end) {
+      const [sh, sm] = start.split(":").map(Number);
+      const [eh, em] = end.split(":").map(Number);
+      return Math.max(15, (eh * 60 + em) - (sh * 60 + sm));
+    }
+
+    function setupSpeech() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        els.voiceBtn.disabled = true;
+        els.voiceBtn.title = "当前浏览器不支持语音输入";
+        return;
+      }
+      els.voiceBtn.addEventListener("click", () => {
+        const recognition = new SpeechRecognition();
+        recognition.lang = "zh-CN";
+        recognition.interimResults = false;
+        recognition.onresult = event => {
+          els.chatInput.value = event.results[0][0].transcript;
+          els.chatInput.focus();
+        };
+        recognition.onerror = () => showToast("语音输入不可用，请检查浏览器权限");
+        recognition.start();
+      });
+    }
+
+    function openSettings() {
+      els.settingsModal.innerHTML = `
+        <h2>设置</h2>
+	        <form class="form-grid" id="settingsForm">
+	          <div class="field">
+	            <label>Claude API Key</label>
+	            <input name="claudeKey" type="password" value="${escapeAttr(state.settings.claudeKey || "")}" placeholder="sk-ant-...">
+	          </div>
+	          <div class="field">
+	            <label>Google Maps API Key</label>
+	            <input name="googleMapsKey" type="password" value="${escapeAttr(state.settings.googleMapsKey || "")}" placeholder="AIza...">
+	          </div>
+	          <div class="detail-block">
+	            <p>Key 只会保存在本机 localStorage，不会写入源码或上传服务器。Claude Key 用于 AI 对话；Google Maps Key 用于 Google Maps 和 Places 搜索，不填也会使用 Leaflet/OpenStreetMap 基础地图。</p>
+	          </div>
+	          <div class="detail-block">
+	            <p>公开发布时，Google Maps Key 建议限制为 Websites/HTTP referrers，并只允许你的 GitHub Pages 或 Cloudflare Pages 域名访问。</p>
+	          </div>
+          <div class="modal-actions">
+            <button class="btn ghost" type="button" id="cancelSettings">取消</button>
+            <button class="btn" type="submit">保存</button>
+          </div>
+        </form>
+      `;
+      openModal(els.settingsModal);
+      document.getElementById("cancelSettings").addEventListener("click", closeModals);
+	      document.getElementById("settingsForm").addEventListener("submit", event => {
+	        event.preventDefault();
+	        const form = new FormData(event.currentTarget);
+	        state.settings.claudeKey = String(form.get("claudeKey") || "").trim();
+	        state.settings.googleMapsKey = String(form.get("googleMapsKey") || "").trim();
+	        saveSettings();
+	        closeModals();
+	        showToast("设置已保存");
+	      });
+    }
+
+    function openModal(modal) {
+      els.modalBackdrop.classList.add("show");
+      modal.classList.add("show");
+    }
+
+    function closeModals() {
+      els.modalBackdrop.classList.remove("show");
+      els.spotModal.classList.remove("show");
+      els.settingsModal.classList.remove("show");
+    }
+
+    function persistAndRender(message) {
+      saveItinerary();
+      renderAll();
+      if (message) showToast(message);
+    }
+
+	    function resetItinerary() {
+	      if (!confirm("确认重置为默认东京行程？本地编辑会被清除。")) return;
+	      state.itinerary = sanitizeItinerary(DEFAULT_TRIP);
+	      state.activeDayId = 1;
+	      state.selectedSpotId = null;
+      saveItinerary();
+      renderAll();
+      showToast("已恢复默认行程");
+    }
+
+    function loadItinerary() {
+      const raw = loadJson(STORAGE_KEYS.itinerary, null);
+      const repaired = sanitizeItinerary(raw);
+      if (!raw || JSON.stringify(raw) !== JSON.stringify(repaired)) {
+        localStorage.setItem(STORAGE_KEYS.itinerary, JSON.stringify(repaired));
+      }
+      return repaired;
+    }
+
+    function saveItinerary() {
+      localStorage.setItem(STORAGE_KEYS.itinerary, JSON.stringify(state.itinerary));
+    }
+
+	    function loadSettings() {
+	      const settings = loadJson(STORAGE_KEYS.settings, {});
+	      return {
+	        claudeKey: String(settings.claudeKey || "").trim(),
+	        googleMapsKey: String(settings.googleMapsKey || "").trim()
+	      };
+	    }
+
+    function saveSettings() {
+      localStorage.setItem(STORAGE_KEYS.settings, JSON.stringify(state.settings));
+    }
+
+    function loadChat() {
+      return loadJson(STORAGE_KEYS.chat, []);
+    }
+
+    function saveChat() {
+      localStorage.setItem(STORAGE_KEYS.chat, JSON.stringify(state.chat));
+    }
+
+    function loadChatActionSeq() {
+      return Number(localStorage.getItem(STORAGE_KEYS.chatActionSeq) || 1);
+    }
+
+    function nextChatActionSeq() {
+      const value = state.chatActionSeq++;
+      localStorage.setItem(STORAGE_KEYS.chatActionSeq, String(state.chatActionSeq));
+      return value;
+    }
+
+    // Reserved for future cloud sync. This static version does not call it by default.
+    async function loadRemoteItinerary() {
+      const response = await fetch("/api/itinerary");
+      if (!response.ok) throw new Error(`GET /api/itinerary failed: ${response.status}`);
+      return response.json();
+    }
+
+    // Reserved for future cloud sync. Expected body is the full itinerary JSON.
+    async function saveRemoteItinerary(itinerary) {
+      const response = await fetch("/api/itinerary", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(itinerary)
+      });
+      if (!response.ok) throw new Error(`PUT /api/itinerary failed: ${response.status}`);
+      return response.json();
+    }
+
+    function loadJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (error) {
+        return fallback;
+      }
+    }
+
+	    function sanitizeItinerary(raw) {
+	      const base = deepClone(DEFAULT_TRIP);
+	      ensureItineraryJapaneseNames(base);
+	      if (!raw || typeof raw !== "object") return base;
+
+      const next = {
+        trip: sanitizeTrip(raw.trip, base.trip),
+        days: sanitizeDays(raw.days, base.days)
+      };
+      return next.days.length ? next : base;
+    }
+
+    function sanitizeTrip(rawTrip, fallbackTrip) {
+      const trip = rawTrip && typeof rawTrip === "object" ? rawTrip : {};
+      return {
+        title: String(trip.title || fallbackTrip.title).trim(),
+        dates: String(trip.dates || fallbackTrip.dates).trim(),
+        hotel: String(trip.hotel || fallbackTrip.hotel).trim(),
+        travelers: Number.isFinite(Number(trip.travelers)) && Number(trip.travelers) > 0
+          ? Number(trip.travelers)
+          : fallbackTrip.travelers
+      };
+    }
+
+    function sanitizeDays(rawDays, fallbackDays) {
+      if (!Array.isArray(rawDays) || !rawDays.length) return deepClone(fallbackDays);
+
+      const days = rawDays.map((rawDay, index) => {
+        const fallbackDay = fallbackDays[index] || fallbackDays[0];
+        if (!rawDay || typeof rawDay !== "object") return deepClone(fallbackDay);
+        const spots = sanitizeSpots(rawDay.spots, fallbackDay.spots);
+        return {
+          id: Number(rawDay.id) || fallbackDay.id,
+          date: String(rawDay.date || fallbackDay.date).trim(),
+          label: String(rawDay.label || fallbackDay.label).trim(),
+          note: String(rawDay.note || fallbackDay.note).trim(),
+          spots
+        };
+      }).filter(day => Array.isArray(day.spots) && day.spots.length);
+
+      return days.length ? days : deepClone(fallbackDays);
+    }
+
+    function sanitizeSpots(rawSpots, fallbackSpots) {
+      if (!Array.isArray(rawSpots) || !rawSpots.length) return deepClone(fallbackSpots);
+      const spots = rawSpots
+        .map((spot, index) => sanitizeSpot(spot, fallbackSpots[index] || fallbackSpots[0]))
+        .filter(Boolean);
+      return spots.length ? spots : deepClone(fallbackSpots);
+    }
+
+    function sanitizeSpot(rawSpot, fallbackSpot) {
+      if (!rawSpot || typeof rawSpot !== "object") return deepClone(fallbackSpot);
+      return {
+	        id: String(rawSpot.id || `spot-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`),
+	        name: String(rawSpot.name || fallbackSpot?.name || "未命名地点").trim(),
+	        nameJa: String(rawSpot.nameJa || getJapaneseName(rawSpot.name) || fallbackSpot?.nameJa || getJapaneseName(fallbackSpot?.name) || "").trim(),
+	        icon: String(rawSpot.icon || fallbackSpot?.icon || "📍").trim(),
+        time: String(rawSpot.time || fallbackSpot?.time || "12:00").trim(),
+        duration: Number.isFinite(Number(rawSpot.duration)) ? Number(rawSpot.duration) : Number(fallbackSpot?.duration || 60),
+        lat: Number.isFinite(Number(rawSpot.lat)) ? Number(rawSpot.lat) : Number(fallbackSpot?.lat || 35.6812),
+        lng: Number.isFinite(Number(rawSpot.lng)) ? Number(rawSpot.lng) : Number(fallbackSpot?.lng || 139.7671),
+        category: String(rawSpot.category || fallbackSpot?.category || "景点").trim(),
+        address: String(rawSpot.address || fallbackSpot?.address || "").trim(),
+        desc: String(rawSpot.desc || fallbackSpot?.desc || "").trim(),
+        transport: sanitizeTransport(rawSpot.transport, fallbackSpot?.transport),
+        ticket: sanitizeTicket(rawSpot.ticket, fallbackSpot?.ticket),
+        bestTime: String(rawSpot.bestTime || fallbackSpot?.bestTime || "按当天动线安排").trim(),
+        tips: Array.isArray(rawSpot.tips) && rawSpot.tips.length
+          ? rawSpot.tips.map(item => String(item).trim()).filter(Boolean)
+          : (fallbackSpot?.tips ? deepClone(fallbackSpot.tips) : ["加入前建议确认营业时间"]),
+        warning: sanitizeWarning(rawSpot.warning, fallbackSpot?.warning)
+      };
+    }
+
+    function sanitizeTransport(rawTransport, fallbackTransport) {
+      const transport = rawTransport && typeof rawTransport === "object" ? rawTransport : {};
+      const fallback = fallbackTransport || {};
+      return {
+        from: String(transport.from || fallback.from || "上一站").trim(),
+        method: String(transport.method || fallback.method || "🚶 步行/电车").trim(),
+        duration: String(transport.duration || fallback.duration || "待确认").trim(),
+        cost: String(transport.cost || fallback.cost || "待确认").trim()
+      };
+    }
+
+    function sanitizeTicket(rawTicket, fallbackTicket) {
+      const ticket = rawTicket && typeof rawTicket === "object" ? rawTicket : {};
+      const fallback = fallbackTicket || {};
+      return {
+        price: String(ticket.price || fallback.price || "按项目").trim(),
+        reservation: ticket.reservation == null ? Boolean(fallback.reservation) : Boolean(ticket.reservation),
+        url: String(ticket.url || fallback.url || "").trim()
+      };
+    }
+
+    function sanitizeWarning(rawWarning, fallbackWarning) {
+      if (!rawWarning && !fallbackWarning) return null;
+      const warning = rawWarning && typeof rawWarning === "object" ? rawWarning : (fallbackWarning || {});
+      if (!warning.text && !warning.level) return null;
+      return {
+        level: String(warning.level || fallbackWarning?.level || "yellow").trim(),
+        text: String(warning.text || fallbackWarning?.text || "").trim()
+      };
+    }
+
+    function getActiveDay() {
+      return getDay(state.activeDayId) || state.itinerary.days[0];
+    }
+
+    function getDay(dayId) {
+      return state.itinerary.days.find(day => day.id === dayId);
+    }
+
+    function getDayBySpot(spotId) {
+      return state.itinerary.days.find(day => day.spots.some(spot => spot.id === spotId));
+    }
+
+    function findSpot(spotId) {
+      return getAllSpots().find(spot => spot.id === spotId);
+    }
+
+    function findSpotByName(name) {
+      return getAllSpots().find(spot => spot.name === name);
+    }
+
+    function getAllSpots() {
+      return state.itinerary.days.flatMap(day => day.spots);
+    }
+
+    function scrollSpotIntoView(spotId) {
+      document.querySelector(`[data-spot-id="${CSS.escape(spotId)}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    function warningHtml(warning) {
+      if (!warning) return "";
+      return `<span class="tag ${escapeAttr(warning.level || "yellow")}">${escapeHtml(warning.text || "")}</span>`;
+    }
+
+    function field(name, label, value, type = "text", step = "") {
+      const stepAttr = step ? ` step="${escapeAttr(step)}"` : "";
+      return `<div class="field"><label>${label}</label><input name="${name}" type="${type}"${stepAttr} value="${escapeAttr(value ?? "")}"></div>`;
+    }
+
+	    function spotTemplate(id, name, icon, category, lat, lng, desc, ticketPrice, warning = null) {
+	      return {
+	        id,
+	        name,
+	        nameJa: getJapaneseName(name),
+	        icon,
+        time: "12:00",
+        duration: 60,
+        lat,
+        lng,
+        category,
+        address: name,
+        desc,
+        transport: { from: "上一站", method: "🚃 电车/步行", duration: "待确认", cost: "待确认" },
+        ticket: { price: ticketPrice, reservation: Boolean(warning?.level === "red"), url: "" },
+        bestTime: "按当天动线安排",
+        tips: ["加入行程后可编辑具体时间与交通"],
+        warning
+      };
+    }
+
+    function suggestNextTime(day) {
+      const last = day.spots.at(-1);
+      if (!last?.time) return "12:00";
+      const [hour, minute] = last.time.split(":").map(Number);
+      const next = new Date(2026, 0, 1, hour || 12, minute || 0);
+      next.setMinutes(next.getMinutes() + Number(last.duration || 60) + 30);
+      return `${String(next.getHours()).padStart(2, "0")}:${String(next.getMinutes()).padStart(2, "0")}`;
+    }
+
+    function formatDateLabel(date) {
+      const value = new Date(`${date}T00:00:00`);
+      return `${value.getMonth() + 1}月${value.getDate()}日`;
+    }
+
+	    function distanceMeters(lat1, lng1, lat2, lng2) {
+	      const radius = 6371000;
+	      const toRad = value => value * Math.PI / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+	      return radius * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	    }
+
+	    function getJapaneseName(name) {
+	      return JAPANESE_NAMES[String(name || "").trim()] || "";
+	    }
+
+	    function ensureItineraryJapaneseNames(itinerary) {
+	      (itinerary.days || []).forEach(day => {
+	        (day.spots || []).forEach(spot => {
+	          if (!spot.nameJa) spot.nameJa = getJapaneseName(spot.name);
+	        });
+	      });
+	      return itinerary;
+	    }
+
+	    function iconForCategory(category) {
+	      const text = String(category || "").toLowerCase();
+	      if (text.includes("restaurant") || text.includes("food") || text.includes("餐") || text.includes("食")) return "🍜";
+	      if (text.includes("cafe") || text.includes("咖啡")) return "☕";
+	      if (text.includes("convenience") || text.includes("便利") || text.includes("shop")) return "🛒";
+	      if (text.includes("pharmacy") || text.includes("chemist") || text.includes("药")) return "💊";
+	      if (text.includes("park") || text.includes("公园")) return "🌿";
+	      if (text.includes("museum") || text.includes("美术") || text.includes("博物")) return "🏛";
+	      if (text.includes("station") || text.includes("交通")) return "🚃";
+	      return "📍";
+	    }
+
+	    async function copyText(text, successMessage = "地址已复制") {
+	      try {
+	        await navigator.clipboard.writeText(text);
+	        showToast(successMessage);
+	      } catch (error) {
+	        prompt(successMessage, text);
+	      }
+	    }
+
+    function showToast(message) {
+      els.toast.textContent = message;
+      els.toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => els.toast.classList.remove("show"), 2200);
+    }
+
+    function deepClone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    function omitUndefined(value) {
+      return Object.fromEntries(Object.entries(value || {}).filter(([, item]) => item !== undefined));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/`/g, "&#096;");
+    }
+
+    function escapeRegExp(value) {
+      return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+  </script>
+</body>
+</html>
