@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -1084,295 +1083,538 @@
 	    };
 
     const DEFAULT_TRIP = {
-      trip: {
-        title: "东京旅行 2026",
-        dates: "2026-05-02 ~ 2026-05-05",
-        hotel: "Park Hyatt Tokyo, Shinjuku",
-        travelers: 6
-      },
-      days: [
-        {
-          id: 1,
-          date: "2026-05-02",
-          label: "Day 1",
-          note: "下午落地，新宿轻松展开",
-          spots: [
-            {
-              id: "d1s1",
-              name: "新宿御苑",
-              icon: "🌿",
-              time: "15:30",
-              duration: 90,
-              lat: 35.6852,
-              lng: 139.7101,
-              category: "公园",
-              address: "11 Naitomachi, Shinjuku City, Tokyo",
-              desc: "融合日式、英式、法式三种园林风格，5月绿意最盛。适合用安静的步调开启东京行程。",
-              transport: { from: "柏悦酒店", method: "🚶 步行", duration: "18分钟", cost: "免费" },
-              ticket: { price: "¥500", reservation: false, url: "https://fng.or.jp/shinjuku/" },
-              bestTime: "15:00-17:30，午后光线柔和，人流逐渐回落。",
-              tips: ["周一休园，黄金周期间仍需确认开放时间", "园内步行较多，建议轻装", "17:30前后陆续闭园"]
-            },
-            {
-              id: "d1s2",
-              name: "东京都厅 Night & Light",
-              icon: "🌃",
-              time: "19:00",
-              duration: 50,
-              lat: 35.6896,
-              lng: 139.6917,
-              category: "地标",
-              address: "2 Chome-8-1 Nishishinjuku, Shinjuku City, Tokyo",
-              desc: "东京都厅夜间光影秀与免费展望空间，是新宿夜景的轻松选择。适合饭前或饭后短暂停留。",
-              transport: { from: "新宿御苑", method: "🚇 丸之内线 + 步行", duration: "18分钟", cost: "约¥180" },
-              ticket: { price: "免费", reservation: false, url: "https://www.metro.tokyo.lg.jp/" },
-              bestTime: "19:00-20:30，天色完全暗下后视觉效果更好。",
-              tips: ["安检排队可能需要10-20分钟", "展望室开放日可能变动", "夜间风大，带薄外套"]
-            },
-            {
-              id: "d1s3",
-              name: "思い出横丁",
-              icon: "🍢",
-              time: "20:30",
-              duration: 80,
-              lat: 35.6934,
-              lng: 139.6993,
-              category: "美食",
-              address: "1 Chome-2 Nishishinjuku, Shinjuku City, Tokyo",
-              desc: "新宿西口的昭和风小巷，串烧、居酒屋和灯笼气氛非常浓。适合小团分散入座，体验东京夜晚烟火气。",
-              transport: { from: "东京都厅", method: "🚶 步行", duration: "13分钟", cost: "免费" },
-              ticket: { price: "按消费", reservation: false, url: "" },
-              bestTime: "20:30后，灯光和小巷气氛最好。",
-              tips: ["多数店铺很小，6人可能需拆桌", "部分店只收现金", "注意不要堵在巷口拍照"]
-            }
+          "trip": {
+                "title": "东京旅行 2026",
+                "dates": "2026-05-02 ~ 2026-05-05",
+                "hotel": "Park Hyatt Tokyo, Shinjuku",
+                "travelers": 6
+          },
+          "days": [
+                {
+                      "id": 1,
+                      "date": "2026-05-02",
+                      "label": "Day 1",
+                      "note": "下午落地，新宿轻松展开",
+                      "spots": [
+                            {
+                                  "id": "d1s2",
+                                  "name": "东京都厅 Night & Light",
+                                  "nameJa": "東京都庁 Night & Light",
+                                  "icon": "🌃",
+                                  "time": "19:00",
+                                  "duration": 50,
+                                  "lat": 35.6896,
+                                  "lng": 139.6917,
+                                  "category": "地标",
+                                  "address": "2 Chome-8-1 Nishishinjuku, Shinjuku City, Tokyo",
+                                  "desc": "东京都厅夜间光影秀与免费展望空间，是新宿夜景的轻松选择。适合饭前或饭后短暂停留。",
+                                  "transport": {
+                                        "from": "新宿御苑",
+                                        "method": "🚇 丸之内线 + 步行",
+                                        "duration": "18分钟",
+                                        "cost": "约¥180"
+                                  },
+                                  "ticket": {
+                                        "price": "免费",
+                                        "reservation": false,
+                                        "url": "https://www.metro.tokyo.lg.jp/"
+                                  },
+                                  "bestTime": "19:00-20:30，天色完全暗下后视觉效果更好。",
+                                  "tips": [
+                                        "安检排队可能需要10-20分钟",
+                                        "展望室开放日可能变动",
+                                        "夜间风大，带薄外套"
+                                  ],
+                                  "warning": null
+                            },
+                            {
+                                  "id": "d1s1",
+                                  "name": "新宿御苑",
+                                  "nameJa": "新宿御苑",
+                                  "icon": "🌿",
+                                  "time": "15:30",
+                                  "duration": 90,
+                                  "lat": 35.6852,
+                                  "lng": 139.7101,
+                                  "category": "公园",
+                                  "address": "11 Naitomachi, Shinjuku City, Tokyo",
+                                  "desc": "融合日式、英式、法式三种园林风格，5月绿意最盛。适合用安静的步调开启东京行程。",
+                                  "transport": {
+                                        "from": "柏悦酒店",
+                                        "method": "🚶 步行",
+                                        "duration": "18分钟",
+                                        "cost": "免费"
+                                  },
+                                  "ticket": {
+                                        "price": "¥500",
+                                        "reservation": false,
+                                        "url": "https://fng.or.jp/shinjuku/"
+                                  },
+                                  "bestTime": "15:00-17:30，午后光线柔和，人流逐渐回落。",
+                                  "tips": [
+                                        "周一休园，黄金周期间仍需确认开放时间",
+                                        "园内步行较多，建议轻装",
+                                        "17:30前后陆续闭园"
+                                  ],
+                                  "warning": null
+                            },
+                            {
+                                  "id": "d1s3",
+                                  "name": "思い出横丁",
+                                  "nameJa": "思い出横丁",
+                                  "icon": "🍢",
+                                  "time": "20:30",
+                                  "duration": 80,
+                                  "lat": 35.6934,
+                                  "lng": 139.6993,
+                                  "category": "美食",
+                                  "address": "1 Chome-2 Nishishinjuku, Shinjuku City, Tokyo",
+                                  "desc": "新宿西口的昭和风小巷，串烧、居酒屋和灯笼气氛非常浓。适合小团分散入座，体验东京夜晚烟火气。",
+                                  "transport": {
+                                        "from": "东京都厅",
+                                        "method": "🚶 步行",
+                                        "duration": "13分钟",
+                                        "cost": "免费"
+                                  },
+                                  "ticket": {
+                                        "price": "按消费",
+                                        "reservation": false,
+                                        "url": ""
+                                  },
+                                  "bestTime": "20:30后，灯光和小巷气氛最好。",
+                                  "tips": [
+                                        "多数店铺很小，6人可能需拆桌",
+                                        "部分店只收现金",
+                                        "注意不要堵在巷口拍照"
+                                  ],
+                                  "warning": null
+                            }
+                      ]
+                },
+                {
+                      "id": 2,
+                      "date": "2026-05-03",
+                      "label": "Day 2",
+                      "note": "吉卜力、浅草、晴空塔与阿佐谷晚餐",
+                      "spots": [
+                            {
+                                  "id": "d2s1",
+                                  "name": "吉卜力美术馆",
+                                  "nameJa": "三鷹の森ジブリ美術館",
+                                  "icon": "🎞",
+                                  "time": "10:00",
+                                  "duration": 120,
+                                  "lat": 35.6962,
+                                  "lng": 139.5704,
+                                  "category": "博物馆",
+                                  "address": "1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo",
+                                  "desc": "三鹰之森吉卜力美术馆是宫崎骏动画世界的沉浸式空间，展陈精致且不允许随意拍照。馆内节奏适合慢慢看，黄金周票务非常紧张。",
+                                  "transport": {
+                                        "from": "柏悦酒店",
+                                        "method": "🚃 JR中央线至三鹰 + 接驳巴士",
+                                        "duration": "45分钟",
+                                        "cost": "约¥650"
+                                  },
+                                  "ticket": {
+                                        "price": "成人¥1000",
+                                        "reservation": true,
+                                        "url": "https://www.ghibli-museum.jp/"
+                                  },
+                                  "bestTime": "10:00入馆，避开午后亲子高峰。",
+                                  "tips": [
+                                        "需提前购票，每月10日抢次月票",
+                                        "馆内大部分区域禁止摄影",
+                                        "纪念品店排队较长"
+                                  ],
+                                  "warning": {
+                                        "level": "red",
+                                        "text": "需提前购票：每月10日抢次月票"
+                                  }
+                            },
+                            {
+                                  "id": "d2s2",
+                                  "name": "浅草寺",
+                                  "nameJa": "浅草寺",
+                                  "icon": "⛩",
+                                  "time": "13:30",
+                                  "duration": 90,
+                                  "lat": 35.7148,
+                                  "lng": 139.7967,
+                                  "category": "神社",
+                                  "address": "2 Chome-3-1 Asakusa, Taito City, Tokyo",
+                                  "desc": "东京最具代表性的古寺之一，雷门、仲见世商店街和本堂连成经典路线。黄金周人流极高，但节庆感也最强。",
+                                  "transport": {
+                                        "from": "吉卜力美术馆",
+                                        "method": "🚃 JR中央线 + 银座线",
+                                        "duration": "65分钟",
+                                        "cost": "约¥580"
+                                  },
+                                  "ticket": {
+                                        "price": "免费",
+                                        "reservation": false,
+                                        "url": "https://www.senso-ji.jp/"
+                                  },
+                                  "bestTime": "13:30-15:00，午餐后顺路游览。",
+                                  "tips": [
+                                        "仲见世边走边吃有区域限制",
+                                        "雷门拍照需等空档",
+                                        "黄金周建议预留更长步行时间"
+                                  ],
+                                  "warning": {
+                                        "level": "yellow",
+                                        "text": "黄金周注意：5月3-5日人流极高"
+                                  }
+                            },
+                            {
+                                  "id": "d2s3",
+                                  "name": "东京晴空塔",
+                                  "nameJa": "東京スカイツリー",
+                                  "icon": "🗼",
+                                  "time": "15:20",
+                                  "duration": 75,
+                                  "lat": 35.7101,
+                                  "lng": 139.8107,
+                                  "category": "地标",
+                                  "address": "1 Chome-1-2 Oshiage, Sumida City, Tokyo",
+                                  "desc": "东京最高的观景塔，晴天可远眺富士山方向。黄金周排队时间显著增加，建议提前网购指定时段票。",
+                                  "transport": {
+                                        "from": "浅草寺",
+                                        "method": "🚶 步行或东武晴空塔线",
+                                        "duration": "22分钟",
+                                        "cost": "步行免费 / 电车约¥160"
+                                  },
+                                  "ticket": {
+                                        "price": "天望甲板约¥2100起",
+                                        "reservation": true,
+                                        "url": "https://www.tokyo-skytree.jp/"
+                                  },
+                                  "bestTime": "15:20-16:40，兼顾白天城市视野和晚餐交通。",
+                                  "tips": [
+                                        "黄金周提前网购",
+                                        "商场电梯和厕所也会排队",
+                                        "带好预约二维码"
+                                  ],
+                                  "warning": {
+                                        "level": "red",
+                                        "text": "需提前购票：黄金周建议网购指定时段"
+                                  }
+                            },
+                            {
+                                  "id": "d2s4",
+                                  "name": "SATO Briand晚餐",
+                                  "nameJa": "SATOブリアン",
+                                  "icon": "🥩",
+                                  "time": "17:20",
+                                  "duration": 110,
+                                  "lat": 35.7041,
+                                  "lng": 139.6364,
+                                  "category": "美食",
+                                  "address": "1 Chome-37-6 Asagayaminami, Suginami City, Tokyo",
+                                  "desc": "阿佐谷的人气和牛烧肉店，以厚切牛排和招牌牛排三明治闻名。本次6人订位已确认，务必准时抵达。",
+                                  "transport": {
+                                        "from": "东京晴空塔",
+                                        "method": "🚇 半藏门线 + JR中央线",
+                                        "duration": "55分钟",
+                                        "cost": "约¥520"
+                                  },
+                                  "ticket": {
+                                        "price": "按套餐/点单",
+                                        "reservation": true,
+                                        "url": "https://tabelog.com/tokyo/A1319/A131905/13164962/"
+                                  },
+                                  "bestTime": "17:20准时入店，订位窗口固定。",
+                                  "tips": [
+                                        "预订号 PGL7WKVM",
+                                        "6人已确认",
+                                        "从晴空塔出发需留足换乘时间"
+                                  ],
+                                  "warning": {
+                                        "level": "green",
+                                        "text": "餐厅预订已确认：5月3日17:20，6人，PGL7WKVM"
+                                  }
+                            }
+                      ]
+                },
+                {
+                      "id": 3,
+                      "date": "2026-05-04",
+                      "label": "Day 3",
+                      "note": "富士山与河口湖一日往返",
+                      "spots": [
+                            {
+                                  "id": "d3s1",
+                                  "name": "新宿高速巴士",
+                                  "nameJa": "バスタ新宿",
+                                  "icon": "🚌",
+                                  "time": "07:30",
+                                  "duration": 30,
+                                  "lat": 35.6887,
+                                  "lng": 139.7002,
+                                  "category": "交通",
+                                  "address": "5 Chome-24-55 Sendagaya, Shibuya City, Tokyo",
+                                  "desc": "从新宿高速巴士总站出发前往河口湖，是富士山一日游最省心的方式。黄金周道路可能拥堵，务必提前到站。",
+                                  "transport": {
+                                        "from": "柏悦酒店",
+                                        "method": "🚕 出租车或酒店接驳",
+                                        "duration": "12分钟",
+                                        "cost": "约¥1600"
+                                  },
+                                  "ticket": {
+                                        "price": "单程约¥2200",
+                                        "reservation": true,
+                                        "url": "https://www.highwaybus.com/"
+                                  },
+                                  "bestTime": "07:30前到站，预留找站台和取票时间。",
+                                  "tips": [
+                                        "黄金周高速易堵",
+                                        "建议提前买往返票",
+                                        "带水和轻食"
+                                  ],
+                                  "warning": {
+                                        "level": "yellow",
+                                        "text": "黄金周注意：高速路况不可控"
+                                  }
+                            },
+                            {
+                                  "id": "d3s2",
+                                  "name": "河口湖",
+                                  "nameJa": "河口湖",
+                                  "icon": "🗻",
+                                  "time": "10:00",
+                                  "duration": 150,
+                                  "lat": 35.5171,
+                                  "lng": 138.7518,
+                                  "category": "自然",
+                                  "address": "Fujikawaguchiko, Yamanashi",
+                                  "desc": "河口湖是观赏富士山倒影和湖景的经典地点。天气好时湖畔步道和缆车区域都很适合拍照。",
+                                  "transport": {
+                                        "from": "新宿高速巴士",
+                                        "method": "🚌 高速巴士",
+                                        "duration": "约2小时",
+                                        "cost": "约¥2200"
+                                  },
+                                  "ticket": {
+                                        "price": "湖畔免费",
+                                        "reservation": false,
+                                        "url": "https://www.fujisan.ne.jp/"
+                                  },
+                                  "bestTime": "10:00-12:30，上午能见度通常更好。",
+                                  "tips": [
+                                        "天气变化快，带薄外套",
+                                        "看富士山很吃云量",
+                                        "湖边餐厅黄金周需排队"
+                                  ],
+                                  "warning": {
+                                        "level": "yellow",
+                                        "text": "黄金周注意：热门观景点拥挤"
+                                  }
+                            },
+                            {
+                                  "id": "d3s3",
+                                  "name": "富士山五合目",
+                                  "nameJa": "富士山五合目",
+                                  "icon": "🌄",
+                                  "time": "14:00",
+                                  "duration": 90,
+                                  "lat": 35.3949,
+                                  "lng": 138.7327,
+                                  "category": "自然",
+                                  "address": "Narusawa, Minamitsuru District, Yamanashi",
+                                  "desc": "富士山五合目可近距离感受山体与云海，海拔较高，气温明显低于东京。若天气或交通限制，可改在河口湖周边深度游。",
+                                  "transport": {
+                                        "from": "河口湖",
+                                        "method": "🚌 登山巴士",
+                                        "duration": "55分钟",
+                                        "cost": "约¥1780"
+                                  },
+                                  "ticket": {
+                                        "price": "区域免费，巴士另计",
+                                        "reservation": false,
+                                        "url": "https://www.fujisan-climb.jp/"
+                                  },
+                                  "bestTime": "14:00前后，视天气决定是否上山。",
+                                  "tips": [
+                                        "气温比东京低约10度",
+                                        "山路可能限流或停运",
+                                        "注意返程巴士末班时间"
+                                  ],
+                                  "warning": {
+                                        "level": "yellow",
+                                        "text": "黄金周注意：交通与天气需当天确认"
+                                  }
+                            }
+                      ]
+                },
+                {
+                      "id": 4,
+                      "date": "2026-05-05",
+                      "label": "Day 4",
+                      "note": "半天城市散步，回新宿退房去机场",
+                      "spots": [
+                            {
+                                  "id": "d4s1",
+                                  "name": "明治神宫",
+                                  "nameJa": "明治神宮",
+                                  "icon": "🌲",
+                                  "time": "09:00",
+                                  "duration": 75,
+                                  "lat": 35.6764,
+                                  "lng": 139.6993,
+                                  "category": "神社",
+                                  "address": "1-1 Yoyogikamizonocho, Shibuya City, Tokyo",
+                                  "desc": "东京市中心最静谧的神社森林，早上进入能避开大部分人潮。适合在离日前留出一段安静步行。",
+                                  "transport": {
+                                        "from": "柏悦酒店",
+                                        "method": "🚇 大江户线 + 步行",
+                                        "duration": "24分钟",
+                                        "cost": "约¥220"
+                                  },
+                                  "ticket": {
+                                        "price": "免费",
+                                        "reservation": false,
+                                        "url": "https://www.meijijingu.or.jp/"
+                                  },
+                                  "bestTime": "09:00-10:15，早间更清净。",
+                                  "tips": [
+                                        "参道碎石路较长",
+                                        "主殿区域保持安静",
+                                        "黄金周仍会逐渐变挤"
+                                  ],
+                                  "warning": {
+                                        "level": "yellow",
+                                        "text": "黄金周注意：5月5日为儿童节"
+                                  }
+                            },
+                            {
+                                  "id": "d4s2",
+                                  "name": "表参道Hills",
+                                  "nameJa": "表参道ヒルズ",
+                                  "icon": "🛍",
+                                  "time": "10:40",
+                                  "duration": 60,
+                                  "lat": 35.6674,
+                                  "lng": 139.7086,
+                                  "category": "购物",
+                                  "address": "4 Chome-12-10 Jingumae, Shibuya City, Tokyo",
+                                  "desc": "表参道的建筑与精品购物地标，适合短暂停留、买伴手礼或咖啡休息。动线紧凑，离涩谷不远。",
+                                  "transport": {
+                                        "from": "明治神宫",
+                                        "method": "🚶 步行",
+                                        "duration": "18分钟",
+                                        "cost": "免费"
+                                  },
+                                  "ticket": {
+                                        "price": "免费",
+                                        "reservation": false,
+                                        "url": "https://www.omotesandohills.com/"
+                                  },
+                                  "bestTime": "10:40-11:40，店铺陆续开门后刚好进入。",
+                                  "tips": [
+                                        "部分店11点开门",
+                                        "退税需带护照",
+                                        "控制购物时间避免影响退房"
+                                  ],
+                                  "warning": null
+                            },
+                            {
+                                  "id": "d4s3",
+                                  "name": "涩谷十字路口",
+                                  "nameJa": "渋谷スクランブル交差点",
+                                  "icon": "🚦",
+                                  "time": "12:00",
+                                  "duration": 35,
+                                  "lat": 35.6595,
+                                  "lng": 139.7005,
+                                  "category": "地标",
+                                  "address": "Shibuya Scramble Crossing, Tokyo",
+                                  "desc": "东京最具辨识度的城市路口之一，适合快速拍照打卡。周边咖啡店可俯拍，但黄金周排队较久。",
+                                  "transport": {
+                                        "from": "表参道Hills",
+                                        "method": "🚇 银座线或步行",
+                                        "duration": "12分钟",
+                                        "cost": "约¥180"
+                                  },
+                                  "ticket": {
+                                        "price": "免费",
+                                        "reservation": false,
+                                        "url": ""
+                                  },
+                                  "bestTime": "12:00，午间人流充足且光线稳定。",
+                                  "tips": [
+                                        "注意红绿灯安全",
+                                        "拍照不要停在路中间",
+                                        "俯拍位可能排队"
+                                  ],
+                                  "warning": {
+                                        "level": "yellow",
+                                        "text": "黄金周注意：涩谷区域人流密集"
+                                  }
+                            },
+                            {
+                                  "id": "d4s4",
+                                  "name": "新宿退房",
+                                  "nameJa": "パークハイアット東京",
+                                  "icon": "🧳",
+                                  "time": "13:00",
+                                  "duration": 45,
+                                  "lat": 35.6856,
+                                  "lng": 139.6907,
+                                  "category": "酒店",
+                                  "address": "Park Hyatt Tokyo, 3-7-1-2 Nishi Shinjuku, Tokyo",
+                                  "desc": "返回柏悦酒店整理行李并退房。建议确认机场交通时间，黄金周车站与道路都可能拥挤。",
+                                  "transport": {
+                                        "from": "涩谷十字路口",
+                                        "method": "🚃 JR山手线 + 出租车/步行",
+                                        "duration": "25分钟",
+                                        "cost": "约¥180起"
+                                  },
+                                  "ticket": {
+                                        "price": "无",
+                                        "reservation": false,
+                                        "url": ""
+                                  },
+                                  "bestTime": "13:00前后，留足行李整理与交通缓冲。",
+                                  "tips": [
+                                        "检查护照和购物袋",
+                                        "提前叫车或确认利木津巴士",
+                                        "把机场时间倒推至少3小时"
+                                  ],
+                                  "warning": null
+                            },
+                            {
+                                  "id": "d4s5",
+                                  "name": "机场",
+                                  "nameJa": "空港",
+                                  "icon": "✈️",
+                                  "time": "14:30",
+                                  "duration": 120,
+                                  "lat": 35.5494,
+                                  "lng": 139.7798,
+                                  "category": "交通",
+                                  "address": "Tokyo International Airport / Narita Airport",
+                                  "desc": "根据实际航班选择羽田或成田路线。黄金周返程客流高，建议更早抵达机场办理值机和退税。",
+                                  "transport": {
+                                        "from": "新宿退房",
+                                        "method": "🚃 机场线/利木津巴士/出租车",
+                                        "duration": "羽田约45-70分钟，成田约90-120分钟",
+                                        "cost": "路线不同"
+                                  },
+                                  "ticket": {
+                                        "price": "按交通方式",
+                                        "reservation": false,
+                                        "url": ""
+                                  },
+                                  "bestTime": "航班起飞前至少3小时到达。",
+                                  "tips": [
+                                        "确认出发机场是羽田还是成田",
+                                        "退税和托运可能排队",
+                                        "保留交通缓冲"
+                                  ],
+                                  "warning": null
+                            }
+                      ]
+                }
           ]
-        },
-        {
-          id: 2,
-          date: "2026-05-03",
-          label: "Day 2",
-          note: "吉卜力、浅草、晴空塔与阿佐谷晚餐",
-          spots: [
-            {
-              id: "d2s1",
-              name: "吉卜力美术馆",
-              icon: "🎞",
-              time: "10:00",
-              duration: 120,
-              lat: 35.6962,
-              lng: 139.5704,
-              category: "博物馆",
-              address: "1 Chome-1-83 Shimorenjaku, Mitaka, Tokyo",
-              desc: "三鹰之森吉卜力美术馆是宫崎骏动画世界的沉浸式空间，展陈精致且不允许随意拍照。馆内节奏适合慢慢看，黄金周票务非常紧张。",
-              transport: { from: "柏悦酒店", method: "🚃 JR中央线至三鹰 + 接驳巴士", duration: "45分钟", cost: "约¥650" },
-              ticket: { price: "成人¥1000", reservation: true, url: "https://www.ghibli-museum.jp/" },
-              bestTime: "10:00入馆，避开午后亲子高峰。",
-              tips: ["需提前购票，每月10日抢次月票", "馆内大部分区域禁止摄影", "纪念品店排队较长"],
-              warning: { level: "red", text: "需提前购票：每月10日抢次月票" }
-            },
-            {
-              id: "d2s2",
-              name: "浅草寺",
-              icon: "⛩",
-              time: "13:30",
-              duration: 90,
-              lat: 35.7148,
-              lng: 139.7967,
-              category: "神社",
-              address: "2 Chome-3-1 Asakusa, Taito City, Tokyo",
-              desc: "东京最具代表性的古寺之一，雷门、仲见世商店街和本堂连成经典路线。黄金周人流极高，但节庆感也最强。",
-              transport: { from: "吉卜力美术馆", method: "🚃 JR中央线 + 银座线", duration: "65分钟", cost: "约¥580" },
-              ticket: { price: "免费", reservation: false, url: "https://www.senso-ji.jp/" },
-              bestTime: "13:30-15:00，午餐后顺路游览。",
-              tips: ["仲见世边走边吃有区域限制", "雷门拍照需等空档", "黄金周建议预留更长步行时间"],
-              warning: { level: "yellow", text: "黄金周注意：5月3-5日人流极高" }
-            },
-            {
-              id: "d2s3",
-              name: "东京晴空塔",
-              icon: "🗼",
-              time: "15:20",
-              duration: 75,
-              lat: 35.7101,
-              lng: 139.8107,
-              category: "地标",
-              address: "1 Chome-1-2 Oshiage, Sumida City, Tokyo",
-              desc: "东京最高的观景塔，晴天可远眺富士山方向。黄金周排队时间显著增加，建议提前网购指定时段票。",
-              transport: { from: "浅草寺", method: "🚶 步行或东武晴空塔线", duration: "22分钟", cost: "步行免费 / 电车约¥160" },
-              ticket: { price: "天望甲板约¥2100起", reservation: true, url: "https://www.tokyo-skytree.jp/" },
-              bestTime: "15:20-16:40，兼顾白天城市视野和晚餐交通。",
-              tips: ["黄金周提前网购", "商场电梯和厕所也会排队", "带好预约二维码"],
-              warning: { level: "red", text: "需提前购票：黄金周建议网购指定时段" }
-            },
-            {
-              id: "d2s4",
-              name: "SATO Briand晚餐",
-              icon: "🥩",
-              time: "17:20",
-              duration: 110,
-              lat: 35.7041,
-              lng: 139.6364,
-              category: "美食",
-              address: "1 Chome-37-6 Asagayaminami, Suginami City, Tokyo",
-              desc: "阿佐谷的人气和牛烧肉店，以厚切牛排和招牌牛排三明治闻名。本次6人订位已确认，务必准时抵达。",
-              transport: { from: "东京晴空塔", method: "🚇 半藏门线 + JR中央线", duration: "55分钟", cost: "约¥520" },
-              ticket: { price: "按套餐/点单", reservation: true, url: "https://tabelog.com/tokyo/A1319/A131905/13164962/" },
-              bestTime: "17:20准时入店，订位窗口固定。",
-              tips: ["预订号 PGL7WKVM", "6人已确认", "从晴空塔出发需留足换乘时间"],
-              warning: { level: "green", text: "餐厅预订已确认：5月3日17:20，6人，PGL7WKVM" }
-            }
-          ]
-        },
-        {
-          id: 3,
-          date: "2026-05-04",
-          label: "Day 3",
-          note: "富士山与河口湖一日往返",
-          spots: [
-            {
-              id: "d3s1",
-              name: "新宿高速巴士",
-              icon: "🚌",
-              time: "07:30",
-              duration: 30,
-              lat: 35.6887,
-              lng: 139.7002,
-              category: "交通",
-              address: "5 Chome-24-55 Sendagaya, Shibuya City, Tokyo",
-              desc: "从新宿高速巴士总站出发前往河口湖，是富士山一日游最省心的方式。黄金周道路可能拥堵，务必提前到站。",
-              transport: { from: "柏悦酒店", method: "🚕 出租车或酒店接驳", duration: "12分钟", cost: "约¥1600" },
-              ticket: { price: "单程约¥2200", reservation: true, url: "https://www.highwaybus.com/" },
-              bestTime: "07:30前到站，预留找站台和取票时间。",
-              tips: ["黄金周高速易堵", "建议提前买往返票", "带水和轻食"],
-              warning: { level: "yellow", text: "黄金周注意：高速路况不可控" }
-            },
-            {
-              id: "d3s2",
-              name: "河口湖",
-              icon: "🗻",
-              time: "10:00",
-              duration: 150,
-              lat: 35.5171,
-              lng: 138.7518,
-              category: "自然",
-              address: "Fujikawaguchiko, Yamanashi",
-              desc: "河口湖是观赏富士山倒影和湖景的经典地点。天气好时湖畔步道和缆车区域都很适合拍照。",
-              transport: { from: "新宿高速巴士", method: "🚌 高速巴士", duration: "约2小时", cost: "约¥2200" },
-              ticket: { price: "湖畔免费", reservation: false, url: "https://www.fujisan.ne.jp/" },
-              bestTime: "10:00-12:30，上午能见度通常更好。",
-              tips: ["天气变化快，带薄外套", "看富士山很吃云量", "湖边餐厅黄金周需排队"],
-              warning: { level: "yellow", text: "黄金周注意：热门观景点拥挤" }
-            },
-            {
-              id: "d3s3",
-              name: "富士山五合目",
-              icon: "🌄",
-              time: "14:00",
-              duration: 90,
-              lat: 35.3949,
-              lng: 138.7327,
-              category: "自然",
-              address: "Narusawa, Minamitsuru District, Yamanashi",
-              desc: "富士山五合目可近距离感受山体与云海，海拔较高，气温明显低于东京。若天气或交通限制，可改在河口湖周边深度游。",
-              transport: { from: "河口湖", method: "🚌 登山巴士", duration: "55分钟", cost: "约¥1780" },
-              ticket: { price: "区域免费，巴士另计", reservation: false, url: "https://www.fujisan-climb.jp/" },
-              bestTime: "14:00前后，视天气决定是否上山。",
-              tips: ["气温比东京低约10度", "山路可能限流或停运", "注意返程巴士末班时间"],
-              warning: { level: "yellow", text: "黄金周注意：交通与天气需当天确认" }
-            }
-          ]
-        },
-        {
-          id: 4,
-          date: "2026-05-05",
-          label: "Day 4",
-          note: "半天城市散步，回新宿退房去机场",
-          spots: [
-            {
-              id: "d4s1",
-              name: "明治神宫",
-              icon: "🌲",
-              time: "09:00",
-              duration: 75,
-              lat: 35.6764,
-              lng: 139.6993,
-              category: "神社",
-              address: "1-1 Yoyogikamizonocho, Shibuya City, Tokyo",
-              desc: "东京市中心最静谧的神社森林，早上进入能避开大部分人潮。适合在离日前留出一段安静步行。",
-              transport: { from: "柏悦酒店", method: "🚇 大江户线 + 步行", duration: "24分钟", cost: "约¥220" },
-              ticket: { price: "免费", reservation: false, url: "https://www.meijijingu.or.jp/" },
-              bestTime: "09:00-10:15，早间更清净。",
-              tips: ["参道碎石路较长", "主殿区域保持安静", "黄金周仍会逐渐变挤"],
-              warning: { level: "yellow", text: "黄金周注意：5月5日为儿童节" }
-            },
-            {
-              id: "d4s2",
-              name: "表参道Hills",
-              icon: "🛍",
-              time: "10:40",
-              duration: 60,
-              lat: 35.6674,
-              lng: 139.7086,
-              category: "购物",
-              address: "4 Chome-12-10 Jingumae, Shibuya City, Tokyo",
-              desc: "表参道的建筑与精品购物地标，适合短暂停留、买伴手礼或咖啡休息。动线紧凑，离涩谷不远。",
-              transport: { from: "明治神宫", method: "🚶 步行", duration: "18分钟", cost: "免费" },
-              ticket: { price: "免费", reservation: false, url: "https://www.omotesandohills.com/" },
-              bestTime: "10:40-11:40，店铺陆续开门后刚好进入。",
-              tips: ["部分店11点开门", "退税需带护照", "控制购物时间避免影响退房"]
-            },
-            {
-              id: "d4s3",
-              name: "涩谷十字路口",
-              icon: "🚦",
-              time: "12:00",
-              duration: 35,
-              lat: 35.6595,
-              lng: 139.7005,
-              category: "地标",
-              address: "Shibuya Scramble Crossing, Tokyo",
-              desc: "东京最具辨识度的城市路口之一，适合快速拍照打卡。周边咖啡店可俯拍，但黄金周排队较久。",
-              transport: { from: "表参道Hills", method: "🚇 银座线或步行", duration: "12分钟", cost: "约¥180" },
-              ticket: { price: "免费", reservation: false, url: "" },
-              bestTime: "12:00，午间人流充足且光线稳定。",
-              tips: ["注意红绿灯安全", "拍照不要停在路中间", "俯拍位可能排队"],
-              warning: { level: "yellow", text: "黄金周注意：涩谷区域人流密集" }
-            },
-            {
-              id: "d4s4",
-              name: "新宿退房",
-              icon: "🧳",
-              time: "13:00",
-              duration: 45,
-              lat: 35.6856,
-              lng: 139.6907,
-              category: "酒店",
-              address: "Park Hyatt Tokyo, 3-7-1-2 Nishi Shinjuku, Tokyo",
-              desc: "返回柏悦酒店整理行李并退房。建议确认机场交通时间，黄金周车站与道路都可能拥挤。",
-              transport: { from: "涩谷十字路口", method: "🚃 JR山手线 + 出租车/步行", duration: "25分钟", cost: "约¥180起" },
-              ticket: { price: "无", reservation: false, url: "" },
-              bestTime: "13:00前后，留足行李整理与交通缓冲。",
-              tips: ["检查护照和购物袋", "提前叫车或确认利木津巴士", "把机场时间倒推至少3小时"]
-            },
-            {
-              id: "d4s5",
-              name: "机场",
-              icon: "✈️",
-              time: "14:30",
-              duration: 120,
-              lat: 35.5494,
-              lng: 139.7798,
-              category: "交通",
-              address: "Tokyo International Airport / Narita Airport",
-              desc: "根据实际航班选择羽田或成田路线。黄金周返程客流高，建议更早抵达机场办理值机和退税。",
-              transport: { from: "新宿退房", method: "🚃 机场线/利木津巴士/出租车", duration: "羽田约45-70分钟，成田约90-120分钟", cost: "路线不同" },
-              ticket: { price: "按交通方式", reservation: false, url: "" },
-              bestTime: "航班起飞前至少3小时到达。",
-              tips: ["确认出发机场是羽田还是成田", "退税和托运可能排队", "保留交通缓冲"]
-            }
-          ]
-        }
-      ]
     };
 
     const OPTIONAL_SPOTS = [
@@ -1446,20 +1688,11 @@
     boot();
 
     function boot() {
-      if (renderItineraryExportMode()) return;
       renderAll();
       initMap();
       setupEvents();
       setupSpeech();
       renderChat();
-    }
-
-    function renderItineraryExportMode() {
-      const params = new URLSearchParams(window.location.search);
-      if (!params.has("exportItinerary")) return false;
-      document.body.innerHTML = '<main style="padding:16px;max-width:960px;margin:0 auto;"><h1 style="font:700 20px system-ui,sans-serif;">Itinerary Export</h1><pre id="itinerary-json" style="white-space:pre-wrap;word-break:break-word;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;"></pre></main>';
-      document.getElementById("itinerary-json").textContent = JSON.stringify(state.itinerary, null, 2);
-      return true;
     }
 
     function setupEvents() {
@@ -3811,4 +4044,3 @@
   </script>
 </body>
 </html>
-
