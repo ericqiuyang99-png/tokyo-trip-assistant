@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -1445,11 +1446,20 @@
     boot();
 
     function boot() {
+      if (renderItineraryExportMode()) return;
       renderAll();
       initMap();
       setupEvents();
       setupSpeech();
       renderChat();
+    }
+
+    function renderItineraryExportMode() {
+      const params = new URLSearchParams(window.location.search);
+      if (!params.has("exportItinerary")) return false;
+      document.body.innerHTML = '<main style="padding:16px;max-width:960px;margin:0 auto;"><h1 style="font:700 20px system-ui,sans-serif;">Itinerary Export</h1><pre id="itinerary-json" style="white-space:pre-wrap;word-break:break-word;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;"></pre></main>';
+      document.getElementById("itinerary-json").textContent = JSON.stringify(state.itinerary, null, 2);
+      return true;
     }
 
     function setupEvents() {
@@ -3801,3 +3811,4 @@
   </script>
 </body>
 </html>
+
